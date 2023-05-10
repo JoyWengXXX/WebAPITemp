@@ -25,7 +25,7 @@ namespace webAPITemplete.Controllers
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> GetStudents()
         {
-            List<StudentDTO>? result = await _studentServices.GetDataList();
+            IEnumerable<StudentDTO>? result = await _studentServices.GetDataList();
             if(result == null)
                 return HttpResponceAdapter.Fail("無資料");
             else

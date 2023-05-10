@@ -39,9 +39,6 @@ var projectDBContext_1 = new webAPITemplete.Repository.Dapper.DbContexts.Project
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 //註冊autofac這個容器
 builder.Host.ConfigureContainer<ContainerBuilder>(builder => builder.RegisterModule(new AutofacModuleRegister()));
-
-//註冊各Eitity Model到Dapper方法中
-DependencyRegister.DefaultDBRegister(builder.Services);
 #endregion
 
 #region JWT設定

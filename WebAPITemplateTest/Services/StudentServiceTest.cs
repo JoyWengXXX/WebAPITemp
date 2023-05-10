@@ -1,4 +1,5 @@
-﻿using Moq;
+﻿using Microsoft.Extensions.Configuration;
+using Moq;
 using webAPITemplete.Models.DTOs.DefaultDB;
 using webAPITemplete.Repository.Dapper.DbContexts;
 using webAPITemplete.Repository.Dapper.interfaces;
@@ -9,20 +10,26 @@ namespace WebAPITemplateTest.Services
 {
     public class StudentServiceTest
     {
+        //取得相依專案webAPITemplete的configuration
+        public IConfigurationRoot Configuration { get; } = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json")
+            .Build();
+
         //CreateData的單元測試
         [Fact]
         public async Task CreateDataTest()
         {
             //Arrange
-            var mock = new Mock<IBaseDapper<StudentDTO, ProjectDBContext_Default>>();
-            mock.Setup(x => x.ExecuteCommand(It.IsAny<string>(), It.IsAny<StudentDTO>())).ReturnsAsync(1);
+            var mock = new Mock<IBaseDapper<ProjectDBContext_Default>>();
+            mock.Setup(x => x.CreateConnection()).Returns(new ProjectDBContext_Default(Configuration.GetConnectionString("DefaultConnection")).CreateConnection());
             var service = new StudentService(mock.Object);
             var input = new StudentDTO()
             {
                 Name = "Test",
-                Email = "Test", 
+                Email = "Test",
                 Address = "Test",
-                Phone = "Test",
+                Phone = "Test"
             };
             //Act
             var result = await service.CreateData(input);
@@ -33,12 +40,11 @@ namespace WebAPITemplateTest.Services
         //DeleteData的單元測試
         [Theory]
         [InlineData(1)]
-        [InlineData(2)]
         public async Task DeleteDataTest(int id)
         {
             //Arrange
-            var mock = new Mock<IBaseDapper<StudentDTO, ProjectDBContext_Default>>();
-            mock.Setup(x => x.ExecuteCommand(It.IsAny<string>(), It.IsAny<StudentDTO>())).ReturnsAsync(1);
+            var mock = new Mock<IBaseDapper<ProjectDBContext_Default>>();
+            mock.Setup(x => x.CreateConnection()).Returns(new ProjectDBContext_Default(Configuration.GetConnectionString("DefaultConnection")).CreateConnection());
             var service = new StudentService(mock.Object);
             var input = new StudentDTO()
             {
@@ -52,22 +58,20 @@ namespace WebAPITemplateTest.Services
 
         //UpdateData的單元測試
         [Theory]
-        [InlineData(1, "Test", "Test", "Test", "Test")]
-        [InlineData(2, "Test", "Test", "Test", "")]
-        [InlineData(3, "", "Test", "Test", "Test")]
-        public async Task UpdateDataTest(int id, string name, string email, string address, string phone)
+        [InlineData(1)]
+        public async Task UpdateDataTest(int id)
         {
             //Arrange
-            var mock = new Mock<IBaseDapper<StudentDTO, ProjectDBContext_Default>>();
-            mock.Setup(x => x.ExecuteCommand(It.IsAny<string>(), It.IsAny<StudentDTO>())).ReturnsAsync(1);
+            var mock = new Mock<IBaseDapper<ProjectDBContext_Default>>();
+            mock.Setup(x => x.CreateConnection()).Returns(new ProjectDBContext_Default(Configuration.GetConnectionString("DefaultConnection")).CreateConnection());
             var service = new StudentService(mock.Object);
             var input = new StudentDTO()
             {
                 Id = id,
-                Name = name,
-                Email = email,
-                Address = address,
-                Phone = phone
+                Name = "Test",
+                Email = "Test",
+                Address = "Test",
+                Phone = "Test"
             };
             //Act
             var result = await service.UpdateData(input);
@@ -75,29 +79,14 @@ namespace WebAPITemplateTest.Services
             Assert.True(result);
         }
 
-        //GetDataList的單元測試
-        [Fact]
-        public async Task GetDataListTest()
-        {
-            //Arrange
-            var mock = new Mock<IBaseDapper<StudentDTO, ProjectDBContext_Default>>();
-            mock.Setup(x => x.QueryListData(It.IsAny<string>())).ReturnsAsync(new List<StudentDTO>());
-            var service = new StudentService(mock.Object);
-            //Act
-            var result = await service.GetDataList();
-            //Assert
-            Assert.NotNull(result);
-        }
-
         //GetExistedData的單元測試
         [Theory]
         [InlineData(1)]
-        [InlineData(2)]
-        public async Task GetExistedDataTest(int id)
+        public async Task GetDataTest(int id)
         {
             //Arrange
-            var mock = new Mock<IBaseDapper<StudentDTO, ProjectDBContext_Default>>();
-            mock.Setup(x => x.QuerySingleData(It.IsAny<string>(), It.IsAny<StudentDTO>())).ReturnsAsync(new StudentDTO());
+            var mock = new Mock<IBaseDapper<ProjectDBContext_Default>>();
+            mock.Setup(x => x.CreateConnection()).Returns(new ProjectDBContext_Default(Configuration.GetConnectionString("DefaultConnection")).CreateConnection());
             var service = new StudentService(mock.Object);
             var input = new StudentDTO()
             {
@@ -105,6 +94,20 @@ namespace WebAPITemplateTest.Services
             };
             //Act
             var result = await service.GetExistedData(input);
+            //Assert
+            Assert.NotNull(result);
+        }
+
+        //GetDataList的單元測試
+        [Fact]
+        public async Task GetAllDataTest()
+        {
+            //Arrange
+            var mock = new Mock<IBaseDapper<ProjectDBContext_Default>>();
+            mock.Setup(x => x.CreateConnection()).Returns(new ProjectDBContext_Default(Configuration.GetConnectionString("DefaultConnection")).CreateConnection());
+            var service = new StudentService(mock.Object);
+            //Act
+            var result = await service.GetDataList();
             //Assert
             Assert.NotNull(result);
         }

@@ -12,7 +12,7 @@ namespace webAPITemplete.Services.interfaces
         /// 取回資料清單
         /// </summary>
         /// <returns></returns>
-        public Task<List<T>?> GetDataList();
+        public Task<IEnumerable<T>?> GetDataList();
         /// <summary>
         /// 取回指定ID資料
         /// </summary>

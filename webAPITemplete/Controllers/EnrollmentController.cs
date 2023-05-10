@@ -30,7 +30,7 @@ namespace webAPITemplete.Controllers
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> GetEnrollments()
         {
-            List<EnrollmentDTO>? result = await _enrollmentServices.GetDataList();
+            IEnumerable<EnrollmentDTO>? result = await _enrollmentServices.GetDataList();
             if (result == null)
                 return HttpResponceAdapter.Fail("查無資料");
             else
