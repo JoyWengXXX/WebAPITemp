@@ -9,15 +9,19 @@ namespace webAPITemplete.Services
     public class CourseService : ICourseService
     {
         private readonly IBaseDapper<CourseDTO, ProjectDBContext_Default> _baseDapperDefault;
+        private readonly IBaseDapper<CourseDTO, ProjectDBContext_Test1> _baseDapperTest;
 
-        public CourseService(IBaseDapper<CourseDTO, ProjectDBContext_Default> baseDapperDefault) 
+        public CourseService(IBaseDapper<CourseDTO, ProjectDBContext_Default> _baseDapperDefault, IBaseDapper<CourseDTO, ProjectDBContext_Test1> _baseDapperTest) 
         {
-            this._baseDapperDefault = baseDapperDefault;
+            this._baseDapperDefault = _baseDapperDefault;
+            this._baseDapperTest = _baseDapperTest;
         }
 
         public async Task<bool> CreateData(CourseDTO input)
         {
-            if(await _baseDapperDefault.ExecuteCommand(@"INSERT INTO Course (Name,Descript) VALUES (@Name,@Descript)", input) > 0)
+            var aaaa = await _baseDapperTest.QueryListData("SELECT ");
+
+            if (await _baseDapperDefault.ExecuteCommand(@"INSERT INTO Course (Name,Descript) VALUES (@Name,@Descript)", input) > 0)
                 return true;
             else
                 return false;

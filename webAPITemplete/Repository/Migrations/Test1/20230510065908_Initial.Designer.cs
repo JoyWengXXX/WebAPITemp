@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using webAPITemplete.Repository.EFCore;
 
@@ -10,9 +11,11 @@ using webAPITemplete.Repository.EFCore;
 namespace webAPITemplete.Repository.Migrations.Test1
 {
     [DbContext(typeof(ProjectDBContext_Test1))]
-    partial class ProjectDBContext_Test1ModelSnapshot : ModelSnapshot
+    [Migration("20230510065908_Initial")]
+    partial class Initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

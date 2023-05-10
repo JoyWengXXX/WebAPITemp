@@ -15,8 +15,10 @@ namespace WebAPITemplateTest.Services
         {
             //Arrange
             var mock = new Mock<IBaseDapper<CourseDTO, ProjectDBContext_Default>>();
+            var mock1 = new Mock<IBaseDapper<CourseDTO, ProjectDBContext_Test1>>();
             mock.Setup(x => x.ExecuteCommand(It.IsAny<string>(), It.IsAny<CourseDTO>())).ReturnsAsync(1);
-            var service = new CourseService(mock.Object);
+            mock1.Setup(x => x.ExecuteCommand(It.IsAny<string>(), It.IsAny<CourseDTO>())).ReturnsAsync(1);
+            var service = new CourseService(mock.Object,mock1.Object);
             var input = new CourseDTO()
             {
                 Name = "Test",
@@ -36,8 +38,10 @@ namespace WebAPITemplateTest.Services
         {
             //Arrange
             var mock = new Mock<IBaseDapper<CourseDTO, ProjectDBContext_Default>>();
+            var mock1 = new Mock<IBaseDapper<CourseDTO, ProjectDBContext_Test1>>();
             mock.Setup(x => x.ExecuteCommand(It.IsAny<string>(), It.IsAny<CourseDTO>())).ReturnsAsync(1);
-            var service = new CourseService(mock.Object);
+            mock1.Setup(x => x.ExecuteCommand(It.IsAny<string>(), It.IsAny<CourseDTO>())).ReturnsAsync(1);
+            var service = new CourseService(mock.Object, mock1.Object);
             var input = new CourseDTO()
             {
                 Id = id
@@ -57,8 +61,10 @@ namespace WebAPITemplateTest.Services
         {
             //Arrange
             var mock = new Mock<IBaseDapper<CourseDTO, ProjectDBContext_Default>>();
+            var mock1 = new Mock<IBaseDapper<CourseDTO, ProjectDBContext_Test1>>();
             mock.Setup(x => x.ExecuteCommand(It.IsAny<string>(), It.IsAny<CourseDTO>())).ReturnsAsync(1);
-            var service = new CourseService(mock.Object);
+            mock1.Setup(x => x.ExecuteCommand(It.IsAny<string>(), It.IsAny<CourseDTO>())).ReturnsAsync(1);
+            var service = new CourseService(mock.Object, mock1.Object);
             var input = new CourseDTO()
             {
                 Id = id,
@@ -77,8 +83,10 @@ namespace WebAPITemplateTest.Services
         {
             //Arrange
             var mock = new Mock<IBaseDapper<CourseDTO, ProjectDBContext_Default>>();
-            mock.Setup(x => x.QueryListData(It.IsAny<string>())).ReturnsAsync(new List<CourseDTO>());
-            var service = new CourseService(mock.Object);
+            var mock1 = new Mock<IBaseDapper<CourseDTO, ProjectDBContext_Test1>>();
+            mock.Setup(x => x.ExecuteCommand(It.IsAny<string>(), It.IsAny<CourseDTO>())).ReturnsAsync(1);
+            mock1.Setup(x => x.ExecuteCommand(It.IsAny<string>(), It.IsAny<CourseDTO>())).ReturnsAsync(1);
+            var service = new CourseService(mock.Object, mock1.Object);
             //Act
             var result = await service.GetDataList();
             //Assert
@@ -93,8 +101,10 @@ namespace WebAPITemplateTest.Services
         {
             //Arrange
             var mock = new Mock<IBaseDapper<CourseDTO, ProjectDBContext_Default>>();
-            mock.Setup(x => x.QuerySingleData(It.IsAny<string>(), It.IsAny<CourseDTO>())).ReturnsAsync(new CourseDTO());
-            var service = new CourseService(mock.Object);
+            var mock1 = new Mock<IBaseDapper<CourseDTO, ProjectDBContext_Test1>>();
+            mock.Setup(x => x.ExecuteCommand(It.IsAny<string>(), It.IsAny<CourseDTO>())).ReturnsAsync(1);
+            mock1.Setup(x => x.ExecuteCommand(It.IsAny<string>(), It.IsAny<CourseDTO>())).ReturnsAsync(1);
+            var service = new CourseService(mock.Object, mock1.Object);
             var input = new CourseDTO()
             {
                 Id = id

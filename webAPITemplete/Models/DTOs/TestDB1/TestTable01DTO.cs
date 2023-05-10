@@ -2,7 +2,7 @@
 
 namespace webAPITemplete.Models.DTOs.TestDB1
 {
-    public class SalesOrderDetailDTO : SalesOrderDetail
+    public class TestTable01DTO : TestTable01
     {
     }
 }
