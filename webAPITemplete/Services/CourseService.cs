@@ -1,36 +1,37 @@
 ﻿using webAPITemplete.Services.interfaces;
-using webAPITemplete.Models.DTOs;
 using System.Text;
 using webAPITemplete.Repository.Dapper.interfaces;
+using webAPITemplete.Repository.Dapper.DbContexts;
+using webAPITemplete.Models.DTOs.DefaultDB;
 
 namespace webAPITemplete.Services
 {
     public class CourseService : ICourseService
     {
-        private readonly IBaseDapper<Course> _baseDapper;
+        private readonly IBaseDapper<CourseDTO, ProjectDBContext_Default> _baseDapperDefault;
 
-        public CourseService(IBaseDapper<Course> baseDapper) 
+        public CourseService(IBaseDapper<CourseDTO, ProjectDBContext_Default> baseDapperDefault) 
         {
-            this._baseDapper = baseDapper;
+            this._baseDapperDefault = baseDapperDefault;
         }
 
-        public async Task<bool> CreateData(Course input)
+        public async Task<bool> CreateData(CourseDTO input)
         {
-            if(await _baseDapper.ExecuteCommand(@"INSERT INTO Course (Name,Descript) VALUES (@Name,@Descript)", input) > 0)
+            if(await _baseDapperDefault.ExecuteCommand(@"INSERT INTO Course (Name,Descript) VALUES (@Name,@Descript)", input) > 0)
                 return true;
             else
                 return false;
         }
 
-        public async Task<bool> DeleteData(Course input)
+        public async Task<bool> DeleteData(CourseDTO input)
         {
-            if(await _baseDapper.ExecuteCommand(@"DELETE FROM Course WHERE Id = @Id", input) > 0)
+            if(await _baseDapperDefault.ExecuteCommand(@"DELETE FROM Course WHERE Id = @Id", input) > 0)
                 return true;
             else
                 return false;
         }
 
-        public async Task<bool> UpdateData(Course input)
+        public async Task<bool> UpdateData(CourseDTO input)
         {
             //使用StringBuilder組合Update的SQL
             StringBuilder sb = new StringBuilder();
@@ -45,20 +46,20 @@ namespace webAPITemplete.Services
             }
             sb.Append("WHERE Id = @Id");
             //執行SQL指令
-            if(await _baseDapper.ExecuteCommand(sb.ToString(), input) > 0)
+            if(await _baseDapperDefault.ExecuteCommand(sb.ToString(), input) > 0)
                 return true;
             else
                 return false;
         }
 
-        public async Task<List<Course>?> GetDataList()
+        public async Task<List<CourseDTO>?> GetDataList()
         {
-            return await _baseDapper.QueryListData(@"SELECT TOP(1000) * FROM Course");
+            return await _baseDapperDefault.QueryListData(@"SELECT TOP(1000) * FROM Course");
         }
 
-        public async Task<Course?> GetExistedData(Course input)
+        public async Task<CourseDTO?> GetExistedData(CourseDTO input)
         {
-            return await _baseDapper.QuerySingleData(@"SELECT * FROM Course WHERE Id = @Id", input);
+            return await _baseDapperDefault.QuerySingleData(@"SELECT * FROM Course WHERE Id = @Id", input);
         }
     }
 }

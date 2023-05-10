@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using webAPITemplete.Models.Entities;
+using webAPITemplete.Models.Entities.DefaultDB;
 
 namespace webAPITemplete.Repository.EFCore
 {
-    public class ProjectDBContext : DbContext
+    public class ProjectDBContext_Default : DbContext
     {
         public DbSet<Student> Student { get; set; }
 
@@ -11,7 +11,7 @@ namespace webAPITemplete.Repository.EFCore
 
         public DbSet<Enrollment> Enrollment { get; set; }
 
-        public ProjectDBContext(DbContextOptions<ProjectDBContext> options) : base(options)
+        public ProjectDBContext_Default(DbContextOptions<ProjectDBContext_Default> options) : base(options)
         {
 
         }

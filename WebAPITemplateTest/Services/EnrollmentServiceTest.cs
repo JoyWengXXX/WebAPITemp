@@ -1,5 +1,6 @@
 ﻿using Moq;
-using webAPITemplete.Models.DTOs;
+using webAPITemplete.Models.DTOs.DefaultDB;
+using webAPITemplete.Repository.Dapper.DbContexts;
 using webAPITemplete.Repository.Dapper.interfaces;
 using webAPITemplete.Services;
 using Xunit;
@@ -13,10 +14,10 @@ namespace WebAPITemplateTest.Services
         public async Task CreateDataTest()
         {
             //Arrange
-            var mock = new Mock<IBaseDapper<Enrollment>>();
-            mock.Setup(x => x.ExecuteCommand(It.IsAny<string>(), It.IsAny<Enrollment>())).ReturnsAsync(1);
+            var mock = new Mock<IBaseDapper<EnrollmentDTO, ProjectDBContext_Default>>();
+            mock.Setup(x => x.ExecuteCommand(It.IsAny<string>(), It.IsAny<EnrollmentDTO>())).ReturnsAsync(1);
             var service = new EnrollmentService(mock.Object);
-            var input = new Enrollment()
+            var input = new EnrollmentDTO()
             {
                 Course_Id = 1,
                 Student_Id = 1,
@@ -35,10 +36,10 @@ namespace WebAPITemplateTest.Services
         public async Task DeleteDataTest(int id)
         {
             //Arrange
-            var mock = new Mock<IBaseDapper<Enrollment>>();
-            mock.Setup(x => x.ExecuteCommand(It.IsAny<string>(), It.IsAny<Enrollment>())).ReturnsAsync(1);
+            var mock = new Mock<IBaseDapper<EnrollmentDTO, ProjectDBContext_Default>>();
+            mock.Setup(x => x.ExecuteCommand(It.IsAny<string>(), It.IsAny<EnrollmentDTO>())).ReturnsAsync(1);
             var service = new EnrollmentService(mock.Object);
-            var input = new Enrollment()
+            var input = new EnrollmentDTO()
             {
                 Id = id
             };
@@ -53,10 +54,10 @@ namespace WebAPITemplateTest.Services
         public async Task UpdateDataTest()
         {
             //Arrange
-            var mock = new Mock<IBaseDapper<Enrollment>>();
-            mock.Setup(x => x.ExecuteCommand(It.IsAny<string>(), It.IsAny<Enrollment>())).ReturnsAsync(1);
+            var mock = new Mock<IBaseDapper<EnrollmentDTO, ProjectDBContext_Default>>();
+            mock.Setup(x => x.ExecuteCommand(It.IsAny<string>(), It.IsAny<EnrollmentDTO>())).ReturnsAsync(1);
             var service = new EnrollmentService(mock.Object);
-            var input = new Enrollment()
+            var input = new EnrollmentDTO()
             {
                 Id = 1,
                 Course_Id = 1,
@@ -74,8 +75,8 @@ namespace WebAPITemplateTest.Services
         public async Task GetDataListTest()
         {
             //Arrange
-            var mock = new Mock<IBaseDapper<Enrollment>>();
-            mock.Setup(x => x.QueryListData(It.IsAny<string>())).ReturnsAsync(new List<Enrollment>());
+            var mock = new Mock<IBaseDapper<EnrollmentDTO, ProjectDBContext_Default>>();
+            mock.Setup(x => x.QueryListData(It.IsAny<string>())).ReturnsAsync(new List<EnrollmentDTO>());
             var service = new EnrollmentService(mock.Object);
             //Act
             var result = await service.GetDataList();
@@ -90,10 +91,10 @@ namespace WebAPITemplateTest.Services
         public async Task GetExistedDataTest(int id)
         {
             //Arrange
-            var mock = new Mock<IBaseDapper<Enrollment>>();
-            mock.Setup(x => x.QuerySingleData(It.IsAny<string>(), It.IsAny<Enrollment>())).ReturnsAsync(new Enrollment());
+            var mock = new Mock<IBaseDapper<EnrollmentDTO, ProjectDBContext_Default>>();
+            mock.Setup(x => x.QuerySingleData(It.IsAny<string>(), It.IsAny<EnrollmentDTO>())).ReturnsAsync(new EnrollmentDTO());
             var service = new EnrollmentService(mock.Object);
-            var input = new Enrollment()
+            var input = new EnrollmentDTO()
             {
                 Id = id
             };

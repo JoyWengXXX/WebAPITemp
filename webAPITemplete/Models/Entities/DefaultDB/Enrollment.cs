@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace webAPITemplete.Models.Entities
+namespace webAPITemplete.Models.Entities.DefaultDB
 {
     public class Enrollment
     {

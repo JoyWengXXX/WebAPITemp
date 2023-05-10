@@ -1,8 +1,8 @@
-﻿using webAPITemplete.Models.DTOs;
+﻿using webAPITemplete.Models.DTOs.DefaultDB;
 
 namespace webAPITemplete.Services.interfaces
 {
-    public interface ICourseService : IBaseServices<Course>
+    public interface ICourseService : IBaseServices<CourseDTO>
     {
     }
 }

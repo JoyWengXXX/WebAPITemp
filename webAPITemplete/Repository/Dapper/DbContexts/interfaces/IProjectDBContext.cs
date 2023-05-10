@@ -2,7 +2,7 @@
 
 namespace webAPITemplete.Repository.Dapper.DbContexts.interfaces
 {
-    public interface IProjectDBContext_2
+    public interface IProjectDBContext
     {
         IDbConnection CreateConnection();
     }

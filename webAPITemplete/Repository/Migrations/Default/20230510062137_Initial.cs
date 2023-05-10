@@ -1,8 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace DataAccessProj.Migrations
+namespace webAPITemplete.Repository.Migrations.Default
 {
     /// <inheritdoc />
     public partial class Initial : Migration

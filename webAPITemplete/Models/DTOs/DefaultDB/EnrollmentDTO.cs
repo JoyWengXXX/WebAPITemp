@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace webAPITemplete.Models.DTOs
+namespace webAPITemplete.Models.DTOs.DefaultDB
 {
-    public class Enrollment
+    public class EnrollmentDTO
     {
         [Required]
         public int Id { get; set; }

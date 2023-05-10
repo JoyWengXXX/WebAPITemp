@@ -2,7 +2,7 @@
 using CommomLibrary.AppInterfaceAdapters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using webAPITemplete.Models.DTOs;
+using webAPITemplete.Models.DTOs.DefaultDB;
 
 namespace webAPITemplete.Controllers
 {
@@ -25,7 +25,7 @@ namespace webAPITemplete.Controllers
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> GetStudents()
         {
-            List<Student>? result = await _studentServices.GetDataList();
+            List<StudentDTO>? result = await _studentServices.GetDataList();
             if(result == null)
                 return HttpResponceAdapter.Fail("無資料");
             else
@@ -42,7 +42,7 @@ namespace webAPITemplete.Controllers
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> GetStudent(int Id)
         {
-            Student? result = await _studentServices.GetExistedData(new Student() { Id = Id });
+            StudentDTO? result = await _studentServices.GetExistedData(new StudentDTO() { Id = Id });
             if(result == null)
                 return HttpResponceAdapter.Fail("無資料");
             else
@@ -56,7 +56,7 @@ namespace webAPITemplete.Controllers
         /// <returns></returns>
         [HttpPost]
         [Authorize(Roles = "admin")]
-        public async Task<IActionResult> CreateStudent(Student Input)
+        public async Task<IActionResult> CreateStudent(StudentDTO Input)
         {
             if(await _studentServices.CreateData(Input))
                 return HttpResponceAdapter.Ok("新增成功");
@@ -71,7 +71,7 @@ namespace webAPITemplete.Controllers
         /// <returns></returns>
         [HttpPut]
         [Authorize(Roles = "admin")]
-        public async Task<IActionResult> UpdateStudent(Student Input)
+        public async Task<IActionResult> UpdateStudent(StudentDTO Input)
         {
             if(await _studentServices.UpdateData(Input))
                 return HttpResponceAdapter.Ok("更新成功");
@@ -88,7 +88,7 @@ namespace webAPITemplete.Controllers
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> DeleteStudent(int Id)
         {
-            if(await _studentServices.DeleteData(new Student() { Id = Id }))
+            if(await _studentServices.DeleteData(new StudentDTO() { Id = Id }))
                 return HttpResponceAdapter.Ok("刪除成功");
             else
                 return HttpResponceAdapter.Fail("刪除失敗");

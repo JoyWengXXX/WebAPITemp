@@ -1,36 +1,37 @@
 ﻿using webAPITemplete.Services.interfaces;
-using webAPITemplete.Models.DTOs;
 using System.Text;
 using webAPITemplete.Repository.Dapper.interfaces;
+using webAPITemplete.Repository.Dapper.DbContexts;
+using webAPITemplete.Models.DTOs.DefaultDB;
 
 namespace webAPITemplete.Services
 {
     public class EnrollmentService : IEnrollmentService
     {
-        private readonly IBaseDapper<Enrollment> _baseDapper;
+        private readonly IBaseDapper<EnrollmentDTO, ProjectDBContext_Default> _baseDapperDefault;
 
-        public EnrollmentService(IBaseDapper<Enrollment> baseDapper) 
+        public EnrollmentService(IBaseDapper<EnrollmentDTO, ProjectDBContext_Default> baseDapperDefault) 
         {
-            this._baseDapper = baseDapper;
+            _baseDapperDefault = baseDapperDefault;
         }
 
-        public async Task<bool> CreateData(Enrollment input)
+        public async Task<bool> CreateData(EnrollmentDTO input)
         {
-            if (await _baseDapper.ExecuteCommand(@"INSERT INTO Enrollment (Student_Id,Course_Id,Enrollment_Date) VALUES (@Student_Id,@Course_Id,@Enrollment_Date)", input) > 0)
+            if (await _baseDapperDefault.ExecuteCommand(@"INSERT INTO Enrollment (Student_Id,Course_Id,Enrollment_Date) VALUES (@Student_Id,@Course_Id,@Enrollment_Date)", input) > 0)
                 return true;
             else
                 return false;
         }
 
-        public async Task<bool> DeleteData(Enrollment input)
+        public async Task<bool> DeleteData(EnrollmentDTO input)
         {
-            if(await _baseDapper.ExecuteCommand(@"DELETE FROM Enrollment WHERE Id = @Id", input) > 0)
+            if(await _baseDapperDefault.ExecuteCommand(@"DELETE FROM Enrollment WHERE Id = @Id", input) > 0)
                 return true;
             else
                 return false;
         }
 
-        public async Task<bool> UpdateData(Enrollment input)
+        public async Task<bool> UpdateData(EnrollmentDTO input)
         {
             //使用StringBuilder組合Update的SQL
             StringBuilder sb = new StringBuilder();
@@ -40,20 +41,20 @@ namespace webAPITemplete.Services
             sb.Append("Enrollment_Date = @Enrollment_Date ");
             sb.Append("WHERE Id = @Id");
             //執行SQL
-            if(await _baseDapper.ExecuteCommand(sb.ToString(), input) > 0)
+            if(await _baseDapperDefault.ExecuteCommand(sb.ToString(), input) > 0)
                 return true;
             else
                 return false;
         }
 
-        public async Task<List<Enrollment>?> GetDataList()
+        public async Task<List<EnrollmentDTO>?> GetDataList()
         {
-            return await _baseDapper.QueryListData(@"SELECT TOP(1000) * FROM Enrollment");
+            return await _baseDapperDefault.QueryListData(@"SELECT TOP(1000) * FROM Enrollment");
         }
 
-        public async Task<Enrollment?> GetExistedData(Enrollment input)
+        public async Task<EnrollmentDTO?> GetExistedData(EnrollmentDTO input)
         {
-            return await _baseDapper.QuerySingleData(@"SELECT * FROM Enrollment WHERE Id = @Id", input);
+            return await _baseDapperDefault.QuerySingleData(@"SELECT * FROM Enrollment WHERE Id = @Id", input);
         }
     }
 }

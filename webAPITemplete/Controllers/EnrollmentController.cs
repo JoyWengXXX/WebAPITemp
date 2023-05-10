@@ -3,6 +3,7 @@ using CommomLibrary.AppInterfaceAdapters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using webAPITemplete.Models.DTOs;
+using webAPITemplete.Models.DTOs.DefaultDB;
 
 namespace webAPITemplete.Controllers
 {
@@ -29,7 +30,7 @@ namespace webAPITemplete.Controllers
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> GetEnrollments()
         {
-            List<Enrollment>? result = await _enrollmentServices.GetDataList();
+            List<EnrollmentDTO>? result = await _enrollmentServices.GetDataList();
             if (result == null)
                 return HttpResponceAdapter.Fail("查無資料");
             else
@@ -45,7 +46,7 @@ namespace webAPITemplete.Controllers
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> GetEnrollment(int Id)
         {
-            Enrollment? result = await _enrollmentServices.GetExistedData(new Enrollment() { Id = Id });
+            EnrollmentDTO? result = await _enrollmentServices.GetExistedData(new EnrollmentDTO() { Id = Id });
             if (result == null)
                 return HttpResponceAdapter.Fail("查無此資料");
             else
@@ -59,10 +60,10 @@ namespace webAPITemplete.Controllers
         /// <returns></returns>
         [HttpPost]
         [Authorize(Roles = "admin")]
-        public async Task<IActionResult> CreateEnrollment(Enrollment Input)
+        public async Task<IActionResult> CreateEnrollment(EnrollmentDTO Input)
         {
             //檢查Input的Student_Id、Course_Id是否存在
-            if (await _studentServices.GetExistedData(new Student() { Id = Input.Student_Id }) == null || await _courseServices.GetExistedData(new Course() { Id = Input.Course_Id }) == null)
+            if (await _studentServices.GetExistedData(new StudentDTO() { Id = Input.Student_Id }) == null || await _courseServices.GetExistedData(new CourseDTO() { Id = Input.Course_Id }) == null)
                 return HttpResponceAdapter.Fail("查無此學生/課程ID");
 
             if (await _enrollmentServices.CreateData(Input))
@@ -78,10 +79,10 @@ namespace webAPITemplete.Controllers
         /// <returns></returns>
         [HttpPut]
         [Authorize(Roles = "admin")]
-        public async Task<IActionResult> UpdateEnrollment(Enrollment Input)
+        public async Task<IActionResult> UpdateEnrollment(EnrollmentDTO Input)
         {
             //檢查Input的Student_Id、Course_Id是否存在
-            if (await _studentServices.GetExistedData(new Student() { Id = Input.Student_Id }) == null || await _courseServices.GetExistedData(new Course() { Id = Input.Course_Id }) == null)
+            if (await _studentServices.GetExistedData(new StudentDTO() { Id = Input.Student_Id }) == null || await _courseServices.GetExistedData(new CourseDTO() { Id = Input.Course_Id }) == null)
                 return HttpResponceAdapter.Fail("查無此學生/課程ID");
 
             if (await _enrollmentServices.UpdateData(Input))
@@ -99,7 +100,7 @@ namespace webAPITemplete.Controllers
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> DeleteEnrollment(int Id)
         {
-            if(await _enrollmentServices.DeleteData(new Enrollment() { Id = Id }))
+            if(await _enrollmentServices.DeleteData(new EnrollmentDTO() { Id = Id }))
                 return HttpResponceAdapter.Ok("刪除成功");
             else
                 return HttpResponceAdapter.Fail("刪除失敗");

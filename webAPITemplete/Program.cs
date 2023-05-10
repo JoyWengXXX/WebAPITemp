@@ -13,21 +13,24 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 #region ORM資料庫連線
     #region EF Core
-    builder.Services.AddDbContext<webAPITemplete.Repository.EFCore.ProjectDBContext>(options =>
+    builder.Services.AddDbContext<webAPITemplete.Repository.EFCore.ProjectDBContext_Default>(options =>
     {
         var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
         options.UseSqlServer(connectionString);
     });
+    builder.Services.AddDbContext<webAPITemplete.Repository.EFCore.ProjectDBContext_Test1>(options =>
+    {
+        var connectionString = builder.Configuration.GetConnectionString("Test1Connection");
+        options.UseSqlServer(connectionString);
+    });
 #endregion
 
-    #region Dapper
-        //註冊不同的DB連線
-        var projectDBContext_1 = new webAPITemplete.Repository.Dapper.DbContexts.ProjectDBContext_1(builder.Configuration.GetConnectionString("DefaultConnection"));
-        var projectDBContext_2 = new webAPITemplete.Repository.Dapper.DbContexts.ProjectDBContext_2(builder.Configuration.GetConnectionString("Test1Connection"));
-        var projectDBContext_3 = new webAPITemplete.Repository.Dapper.DbContexts.ProjectDBContext_3(builder.Configuration.GetConnectionString("Test2Connection"));
+#region Dapper
+//註冊不同的DB連線
+var projectDBContext_1 = new webAPITemplete.Repository.Dapper.DbContexts.ProjectDBContext_Default(builder.Configuration.GetConnectionString("DefaultConnection"));
+        var projectDBContext_2 = new webAPITemplete.Repository.Dapper.DbContexts.ProjectDBContext_Test1(builder.Configuration.GetConnectionString("Test1Connection"));
         builder.Services.AddSingleton(projectDBContext_1);
         builder.Services.AddSingleton(projectDBContext_2);
-        builder.Services.AddSingleton(projectDBContext_3);
     #endregion
 #endregion
 
@@ -38,7 +41,7 @@ builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 builder.Host.ConfigureContainer<ContainerBuilder>(builder => builder.RegisterModule(new AutofacModuleRegister()));
 
 //註冊各Eitity Model到Dapper方法中
-DependencyRegister.Register(builder.Services);
+DependencyRegister.DefaultDBRegister(builder.Services);
 #endregion
 
 #region JWT設定
@@ -92,7 +95,7 @@ using (var scope = app.Services.CreateScope())
     var services = scope.ServiceProvider;
     try
     {
-        var context = services.GetRequiredService<webAPITemplete.Repository.EFCore.ProjectDBContext>();
+        var context = services.GetRequiredService<webAPITemplete.Repository.EFCore.ProjectDBContext_Test1>();
         context.Database.Migrate();
     }
     catch (Exception ex)

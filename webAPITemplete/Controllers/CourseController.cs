@@ -2,7 +2,7 @@
 using CommomLibrary.AppInterfaceAdapters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using webAPITemplete.Models.DTOs;
+using webAPITemplete.Models.DTOs.DefaultDB;
 
 namespace webAPITemplete.Controllers
 {
@@ -25,7 +25,7 @@ namespace webAPITemplete.Controllers
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> GetCourses()
         {
-            List<Course>? result = await _courseServices.GetDataList();
+            List<CourseDTO>? result = await _courseServices.GetDataList();
             if (result == null)
                 return HttpResponceAdapter.Fail("查無資料");
             else
@@ -41,7 +41,7 @@ namespace webAPITemplete.Controllers
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> GetCourse(int Id)
         {
-            Course? result = await _courseServices.GetExistedData(new Course() { Id = Id });
+            CourseDTO? result = await _courseServices.GetExistedData(new CourseDTO() { Id = Id });
             if (result == null)
                 return HttpResponceAdapter.Fail("查無此資料");
             else
@@ -55,7 +55,7 @@ namespace webAPITemplete.Controllers
         /// <returns></returns>
         [HttpPost]
         [Authorize(Roles = "admin")]
-        public async Task<IActionResult> CreateCourse(Course Input)
+        public async Task<IActionResult> CreateCourse(CourseDTO Input)
         {
             if(await _courseServices.CreateData(Input))
                 return HttpResponceAdapter.Ok("新增成功");
@@ -70,7 +70,7 @@ namespace webAPITemplete.Controllers
         /// <returns></returns>
         [HttpPut]
         [Authorize(Roles = "admin")]
-        public async Task<IActionResult> UpdateCourse(Course Input)
+        public async Task<IActionResult> UpdateCourse(CourseDTO Input)
         {
             if(await _courseServices.UpdateData(Input))
                 return HttpResponceAdapter.Ok("更新成功");
@@ -87,7 +87,7 @@ namespace webAPITemplete.Controllers
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> DeleteCourse(int Id)
         {
-            if(await _courseServices.DeleteData(new Course() { Id = Id }))
+            if(await _courseServices.DeleteData(new CourseDTO() { Id = Id }))
                 return HttpResponceAdapter.Ok("刪除成功");
             else
                 return HttpResponceAdapter.Fail("刪除失敗");

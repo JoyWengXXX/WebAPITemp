@@ -1,36 +1,37 @@
 ﻿using webAPITemplete.Services.interfaces;
-using webAPITemplete.Models.DTOs;
 using System.Text;
 using webAPITemplete.Repository.Dapper.interfaces;
+using webAPITemplete.Repository.Dapper.DbContexts;
+using webAPITemplete.Models.DTOs.DefaultDB;
 
 namespace webAPITemplete.Services
 {
     public class StudentService : IStudentService
     {
-        private readonly IBaseDapper<Student> _baseDapper;
+        private readonly IBaseDapper<StudentDTO, ProjectDBContext_Default> _baseDapperDefault;
 
-        public StudentService(IBaseDapper<Student> baseDapper) 
+        public StudentService(IBaseDapper<StudentDTO, ProjectDBContext_Default> baseDapperDefault) 
         {
-            this._baseDapper = baseDapper;
+            _baseDapperDefault = baseDapperDefault;
         }
 
-        public async Task<bool> CreateData(Student input)
+        public async Task<bool> CreateData(StudentDTO input)
         {
-            if (await _baseDapper.ExecuteCommand(@"INSERT INTO Student (Name,Email,Phone,Address) VALUES (@Name,@Email,@Phone,@Address)", input) > 0)
+            if (await _baseDapperDefault.ExecuteCommand(@"INSERT INTO Student (Name,Email,Phone,Address) VALUES (@Name,@Email,@Phone,@Address)", input) > 0)
                 return true;
             else
                 return false;
         }
 
-        public async Task<bool> DeleteData(Student input)
+        public async Task<bool> DeleteData(StudentDTO input)
         {
-            if(await _baseDapper.ExecuteCommand(@"DELETE FROM Student WHERE Id = @Id", input) > 0)
+            if(await _baseDapperDefault.ExecuteCommand(@"DELETE FROM Student WHERE Id = @Id", input) > 0)
                 return true;
             else
                 return false;
         }
 
-        public async Task<bool> UpdateData(Student input)
+        public async Task<bool> UpdateData(StudentDTO input)
         {
             //使用StringBuilder組合Update的SQL
             StringBuilder sb = new StringBuilder();
@@ -53,20 +54,20 @@ namespace webAPITemplete.Services
             }
             sb.Append(" WHERE Id = @Id");
             //執行Query
-            if(await _baseDapper.ExecuteCommand(sb.ToString(), input) > 0)
+            if(await _baseDapperDefault.ExecuteCommand(sb.ToString(), input) > 0)
                 return true;
             else
                 return false;
         }
 
-        public async Task<List<Student>?> GetDataList()
+        public async Task<List<StudentDTO>?> GetDataList()
         {
-            return await _baseDapper.QueryListData(@"SELECT TOP(1000) * FROM Student");
+            return await _baseDapperDefault.QueryListData(@"SELECT TOP(1000) * FROM Student");
         }
 
-        public async Task<Student?> GetExistedData(Student input)
+        public async Task<StudentDTO?> GetExistedData(StudentDTO input)
         {
-            return await _baseDapper.QuerySingleData(@"SELECT * FROM Student WHERE Id = @Id", input);
+            return await _baseDapperDefault.QuerySingleData(@"SELECT * FROM Student WHERE Id = @Id", input);
         }
     }
 }
