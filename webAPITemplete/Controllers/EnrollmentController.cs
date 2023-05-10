@@ -66,7 +66,7 @@ namespace webAPITemplete.Controllers
             if (await _studentServices.GetExistedData(new StudentDTO() { Id = Input.Student_Id }) == null || await _courseServices.GetExistedData(new CourseDTO() { Id = Input.Course_Id }) == null)
                 return HttpResponceAdapter.Fail("查無此學生/課程ID");
 
-            if (await _enrollmentServices.CreateData(Input))
+            if (await _enrollmentServices.CreateData(Input) > 0)
                 return HttpResponceAdapter.Ok("新增成功");
             else
                 return HttpResponceAdapter.Fail("新增失敗");
@@ -85,7 +85,7 @@ namespace webAPITemplete.Controllers
             if (await _studentServices.GetExistedData(new StudentDTO() { Id = Input.Student_Id }) == null || await _courseServices.GetExistedData(new CourseDTO() { Id = Input.Course_Id }) == null)
                 return HttpResponceAdapter.Fail("查無此學生/課程ID");
 
-            if (await _enrollmentServices.UpdateData(Input))
+            if (await _enrollmentServices.UpdateData(Input) > 0)
                 return HttpResponceAdapter.Ok("更新成功");
             else
                 return HttpResponceAdapter.Fail("更新失敗");
@@ -100,7 +100,7 @@ namespace webAPITemplete.Controllers
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> DeleteEnrollment(int Id)
         {
-            if(await _enrollmentServices.DeleteData(new EnrollmentDTO() { Id = Id }))
+            if(await _enrollmentServices.DeleteData(new EnrollmentDTO() { Id = Id }) > 0)
                 return HttpResponceAdapter.Ok("刪除成功");
             else
                 return HttpResponceAdapter.Fail("刪除失敗");

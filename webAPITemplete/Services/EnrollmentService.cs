@@ -4,41 +4,31 @@ using webAPITemplete.Repository.Dapper.interfaces;
 using webAPITemplete.Repository.Dapper.DbContexts;
 using webAPITemplete.Models.DTOs.DefaultDB;
 using Dapper;
+using System.Data;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace webAPITemplete.Services
 {
     public class EnrollmentService : IEnrollmentService
     {
-        private readonly IBaseDapper<ProjectDBContext_Default> _baseDapperDefault;
+        private readonly IDbConnection _dbConnection;
 
         public EnrollmentService(IBaseDapper<ProjectDBContext_Default> baseDapperDefault) 
         {
-            _baseDapperDefault = baseDapperDefault;
+            _dbConnection = baseDapperDefault.CreateConnection();
         }
 
-        public async Task<bool> CreateData(EnrollmentDTO input)
+        public async Task<int> CreateData(EnrollmentDTO input)
         {
-            using (var connection = _baseDapperDefault.CreateConnection())
-            {
-                if (await connection.ExecuteAsync(@"INSERT INTO Enrollment (Student_Id,Course_Id,Enrollment_Date) VALUES (@Student_Id,@Course_Id,@Enrollment_Date)", input) > 0)
-                    return true;
-                else
-                    return false;
-            }
+            return await _dbConnection.ExecuteAsync(@"INSERT INTO Enrollment (Student_Id,Course_Id,Enrollment_Date) VALUES (@Student_Id,@Course_Id,@Enrollment_Date)", input);
         }
 
-        public async Task<bool> DeleteData(EnrollmentDTO input)
+        public async Task<int> DeleteData(EnrollmentDTO input)
         {
-            using (var connection = _baseDapperDefault.CreateConnection())
-            {
-                if (await connection.ExecuteAsync(@"DELETE FROM Enrollment WHERE Id = @Id", input) > 0)
-                    return true;
-                else
-                    return false;
-            }
+            return await _dbConnection.ExecuteAsync(@"DELETE FROM Enrollment WHERE Id = @Id", input);
         }
 
-        public async Task<bool> UpdateData(EnrollmentDTO input)
+        public async Task<int> UpdateData(EnrollmentDTO input)
         {
             //使用StringBuilder組合Update的SQL
             StringBuilder sb = new StringBuilder();
@@ -48,33 +38,21 @@ namespace webAPITemplete.Services
             sb.Append("Enrollment_Date = @Enrollment_Date ");
             sb.Append("WHERE Id = @Id");
             //執行SQL
-            using (var connection = _baseDapperDefault.CreateConnection())
-            {
-                if (await connection.ExecuteAsync(sb.ToString(), input) > 0)
-                    return true;
-                else
-                    return false;
-            }
+            return await _dbConnection.ExecuteAsync(sb.ToString(), input);
         }
 
         public async Task<IEnumerable<EnrollmentDTO>?> GetDataList()
         {
-            using (var connection = _baseDapperDefault.CreateConnection())
-            {
-                //檢查資料表中是否有資料
-                if ((await connection.QueryAsync<EnrollmentDTO>(@"SELECT TOP(1) * FROM Enrollment")).Count() == 0)
-                    return null;
-                else
-                    return (await connection.QueryAsync<EnrollmentDTO>(@"SELECT TOP(1000) * FROM Enrollment")).ToList();
-            }
+            //檢查資料表中是否有資料
+            if ((await _dbConnection.QueryAsync<EnrollmentDTO>(@"SELECT TOP(1) * FROM Enrollment")).Count() == 0)
+                return null;
+            else
+                return (await _dbConnection.QueryAsync<EnrollmentDTO>(@"SELECT TOP(1000) * FROM Enrollment")).ToList();
         }
 
         public async Task<EnrollmentDTO?> GetExistedData(EnrollmentDTO input)
         {
-            using (var connection = _baseDapperDefault.CreateConnection())
-            {
-                return await connection.QuerySingleOrDefaultAsync<EnrollmentDTO>(@"SELECT * FROM Enrollment WHERE Id = @Id", input);
-            }
+            return await _dbConnection.QuerySingleOrDefaultAsync<EnrollmentDTO>(@"SELECT * FROM Enrollment WHERE Id = @Id", input);
         }
     }
 }

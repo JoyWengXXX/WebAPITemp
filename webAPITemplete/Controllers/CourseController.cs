@@ -57,7 +57,7 @@ namespace webAPITemplete.Controllers
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> CreateCourse(CourseDTO Input)
         {
-            if(await _courseServices.CreateData(Input))
+            if(await _courseServices.CreateData(Input) > 0)
                 return HttpResponceAdapter.Ok("新增成功");
             else
                 return HttpResponceAdapter.Fail("新增失敗");
@@ -72,7 +72,7 @@ namespace webAPITemplete.Controllers
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> UpdateCourse(CourseDTO Input)
         {
-            if(await _courseServices.UpdateData(Input))
+            if(await _courseServices.UpdateData(Input) > 0)
                 return HttpResponceAdapter.Ok("更新成功");
             else
                 return HttpResponceAdapter.Fail("更新失敗");
@@ -87,7 +87,7 @@ namespace webAPITemplete.Controllers
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> DeleteCourse(int Id)
         {
-            if(await _courseServices.DeleteData(new CourseDTO() { Id = Id }))
+            if(await _courseServices.DeleteData(new CourseDTO() { Id = Id }) > 0)
                 return HttpResponceAdapter.Ok("刪除成功");
             else
                 return HttpResponceAdapter.Fail("刪除失敗");

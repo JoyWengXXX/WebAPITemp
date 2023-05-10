@@ -94,8 +94,10 @@ using (var scope = app.Services.CreateScope())
     var services = scope.ServiceProvider;
     try
     {
-        var context = services.GetRequiredService<webAPITemplete.Repository.EFCore.ProjectDBContext_Test1>();
-        context.Database.Migrate();
+        var context1 = services.GetRequiredService<webAPITemplete.Repository.EFCore.ProjectDBContext_Default>();
+        var context2 = services.GetRequiredService<webAPITemplete.Repository.EFCore.ProjectDBContext_Test1>();
+        context1.Database.Migrate();
+        context2.Database.Migrate();
     }
     catch (Exception ex)
     {

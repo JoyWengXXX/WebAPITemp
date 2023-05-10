@@ -1,113 +1,126 @@
-﻿using Microsoft.Extensions.Configuration;
-using Moq;
+﻿using Moq;
 using webAPITemplete.Models.DTOs.DefaultDB;
-using webAPITemplete.Repository.Dapper.DbContexts;
-using webAPITemplete.Repository.Dapper.interfaces;
-using webAPITemplete.Services;
+using webAPITemplete.Services.interfaces;
 using Xunit;
 
 namespace WebAPITemplateTest.Services
 {
     public class EnrollmentServiceTest
     {
-        //取得相依專案webAPITemplete的configuration
-        public IConfigurationRoot Configuration { get; } = new ConfigurationBuilder()
-            .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json")
-            .Build();
-
         //CreateData的單元測試
         [Fact]
-        public async Task CreateDataTest()
+        public async Task CreateData_ValidCustomer_ReturnCreatedNum()
         {
             //Arrange
-            var mock = new Mock<IBaseDapper<ProjectDBContext_Default>>();
-            mock.Setup(x => x.CreateConnection()).Returns(new ProjectDBContext_Default(Configuration.GetConnectionString("DefaultConnection")).CreateConnection());
-            var service = new EnrollmentService(mock.Object);
+            //mock一個IEnrollmentService物件
+            var mockEnrollmentService = new Mock<IEnrollmentService>();
+            //設定mock物件的CreateData方法回傳1
+            mockEnrollmentService.Setup(x => x.CreateData(It.IsAny<EnrollmentDTO>())).ReturnsAsync(1);
+            //建立EnrollmentDTO物件
             var input = new EnrollmentDTO()
             {
                 Course_Id = 1,
                 Student_Id = 1,
-                Enrollment_Date = DateTime.Now,
+                Enrollment_Date = DateTime.Now
             };
             //Act
-            var result = await service.CreateData(input);
+            //呼叫mock物件的CreateData方法
+            var result = await mockEnrollmentService.Object.CreateData(input);
             //Assert
-            Assert.True(result);
+            //驗證回傳值是否為1
+            Assert.Equal(1, result);
         }
 
         //DeleteData的單元測試
         [Theory]
         [InlineData(1)]
-        public async Task DeleteDataTest(int id)
+        public async Task DeleteData_ValidCustomer_ReturnDeletedNum(int id)
         {
             //Arrange
-            var mock = new Mock<IBaseDapper<ProjectDBContext_Default>>();
-            mock.Setup(x => x.CreateConnection()).Returns(new ProjectDBContext_Default(Configuration.GetConnectionString("DefaultConnection")).CreateConnection());
-            var service = new EnrollmentService(mock.Object);
+            //mock一個IEnrollmentService物件
+            var mockEnrollmentService = new Mock<IEnrollmentService>();
+            //設定mock物件的DeleteData方法回傳1
+            mockEnrollmentService.Setup(x => x.DeleteData(It.IsAny<EnrollmentDTO>())).ReturnsAsync(1);
+            //建立EnrollmentDTO物件
             var input = new EnrollmentDTO()
             {
                 Id = id
             };
             //Act
-            var result = await service.DeleteData(input);
+            //呼叫mock物件的DeleteData方法
+            var result = await mockEnrollmentService.Object.DeleteData(input);
             //Assert
-            Assert.True(result);
+            //驗證回傳值是否為1
+            Assert.Equal(1, result);
         }
 
         //UpdateData的單元測試
         [Theory]
-        [InlineData(1)]
-        public async Task UpdateDataTest(int id)
+        [InlineData(1, 1, 1)]
+        public async Task UpdateData_ValidCustomer_ReturnUpdatedNum(int id, int course_id, int student_id)
         {
             //Arrange
-            var mock = new Mock<IBaseDapper<ProjectDBContext_Default>>();
-            mock.Setup(x => x.CreateConnection()).Returns(new ProjectDBContext_Default(Configuration.GetConnectionString("DefaultConnection")).CreateConnection());
-            var service = new EnrollmentService(mock.Object);
+            //mock一個IEnrollmentService物件
+            var mockEnrollmentService = new Mock<IEnrollmentService>();
+            //設定mock物件的UpdateData方法回傳1
+            mockEnrollmentService.Setup(x => x.UpdateData(It.IsAny<EnrollmentDTO>())).ReturnsAsync(1);
+            //建立EnrollmentDTO物件
             var input = new EnrollmentDTO()
             {
                 Id = id,
-                Course_Id = 1,
-                Student_Id = 1,
-                Enrollment_Date = DateTime.Now,
+                Course_Id = course_id,
+                Student_Id = student_id,
+                Enrollment_Date = DateTime.Now
             };
             //Act
-            var result = await service.UpdateData(input);
+            //呼叫mock物件的UpdateData方法
+            var result = await mockEnrollmentService.Object.UpdateData(input);
             //Assert
-            Assert.True(result);
+            //驗證回傳值是否為1
+            Assert.Equal(1, result);
         }
 
         //GetExistedData的單元測試
         [Theory]
         [InlineData(1)]
-        public async Task GetDataTest(int id)
+        public async Task GetExistedData_ValidCustomer_ReturnEnrollmentDTO(int id)
         {
             //Arrange
-            var mock = new Mock<IBaseDapper<ProjectDBContext_Default>>();
-            mock.Setup(x => x.CreateConnection()).Returns(new ProjectDBContext_Default(Configuration.GetConnectionString("DefaultConnection")).CreateConnection());
-            var service = new EnrollmentService(mock.Object);
+            //mock一個IEnrollmentService物件
+            var mockEnrollmentService = new Mock<IEnrollmentService>();
+            //建立EnrollmentDTO物件
             var input = new EnrollmentDTO()
             {
-                Id = id
+                Id = id,
+                Course_Id = 1,
+                Student_Id = 1,
+                Enrollment_Date = DateTime.Now
             };
+            //設定mock物件的GetExistedData方法回傳EnrollmentDTO
+            mockEnrollmentService.Setup(x => x.GetExistedData(It.IsAny<EnrollmentDTO>())).ReturnsAsync(input);
             //Act
-            var result = await service.GetExistedData(input);
+            //呼叫mock物件的GetExistedData方法
+            var result = await mockEnrollmentService.Object.GetExistedData(input);
             //Assert
-            Assert.NotNull(result);
+            //驗證回傳值是否與input相同
+            Assert.Equal(result, input);
         }
 
         //GetDataList的單元測試
         [Fact]
-        public async Task GetAllDataTest()
+        public async Task GetDataList_ValidCustomer_ReturnEnrollmentDTOList()
         {
             //Arrange
-            var mock = new Mock<IBaseDapper<ProjectDBContext_Default>>();
-            mock.Setup(x => x.CreateConnection()).Returns(new ProjectDBContext_Default(Configuration.GetConnectionString("DefaultConnection")).CreateConnection());
-            var service = new EnrollmentService(mock.Object);
+            //mock一個IEnrollmentService物件
+            var mockEnrollmentService = new Mock<IEnrollmentService>();
+            //設定mock物件的GetDataList方法回傳EnrollmentDTO List
+            mockEnrollmentService.Setup(x => x.GetDataList()).ReturnsAsync(new List<EnrollmentDTO>());
             //Act
-            var result = await service.GetDataList();
+            //呼叫mock物件的GetDataList方法
+            var result = await mockEnrollmentService.Object.GetDataList();
             //Assert
-            Assert.NotNull(result);
+            //驗證回傳值是否為EnrollmentDTO List
+            Assert.IsType<List<EnrollmentDTO>>(result);
         }
     }
 }

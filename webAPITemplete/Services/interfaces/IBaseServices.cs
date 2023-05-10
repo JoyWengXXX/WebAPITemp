@@ -22,16 +22,16 @@ namespace webAPITemplete.Services.interfaces
         /// 新增資料
         /// </summary>
         /// <param name="input"></param>
-        public Task<bool> CreateData(T input);
+        public Task<int> CreateData(T input);
         /// <summary>
         /// 更新資料
         /// </summary>
         /// <param name="input"></param>
-        public Task<bool> UpdateData(T input);
+        public Task<int> UpdateData(T input);
         /// <summary>
         /// 刪除資料
         /// </summary>
         /// <param name="input"></param>
-        public Task<bool> DeleteData(T input);
+        public Task<int> DeleteData(T input);
     }
 }
