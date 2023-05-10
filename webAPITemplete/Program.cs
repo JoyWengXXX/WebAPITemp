@@ -25,12 +25,14 @@ var builder = WebApplication.CreateBuilder(args);
     });
 #endregion
 
-#region Dapper
-//註冊不同的DB連線
-var projectDBContext_1 = new webAPITemplete.Repository.Dapper.DbContexts.ProjectDBContext_Default(builder.Configuration.GetConnectionString("DefaultConnection"));
-        var projectDBContext_2 = new webAPITemplete.Repository.Dapper.DbContexts.ProjectDBContext_Test1(builder.Configuration.GetConnectionString("Test1Connection"));
-        builder.Services.AddSingleton(projectDBContext_1);
-        builder.Services.AddSingleton(projectDBContext_2);
+    #region Dapper
+    //註冊不同的DB連線
+    var projectDBContext_1 = new webAPITemplete.Repository.Dapper.DbContexts.ProjectDBContext_Default(builder.Configuration.GetConnectionString("DefaultConnection"));
+    var projectDBContext_2 = new webAPITemplete.Repository.Dapper.DbContexts.ProjectDBContext_Test1(builder.Configuration.GetConnectionString("Test1Connection"));
+    builder.Services.AddSingleton(projectDBContext_1);
+    builder.Services.AddSingleton(projectDBContext_2);
+    //註冊Dapper的Repository
+    builder.Services.AddScoped(typeof(webAPITemplete.Repository.Dapper.interfaces.IBaseDapper<>), typeof(webAPITemplete.Repository.Dapper.services.BaseDapper<>));
     #endregion
 #endregion
 

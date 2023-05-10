@@ -11,10 +11,12 @@ namespace webAPITemplete.Services
     public class CourseService : ICourseService
     {
         private readonly IBaseDapper<ProjectDBContext_Default> _baseDapperDefault;
-        //private readonly IBaseDapper<TestTable01DTO, ProjectDBContext_Test1> _baseDapperTest; 
+        //private readonly IBaseDapper<ProjectDBContext_Test1> _baseDapperTest; 
 
-        public CourseService(IBaseDapper<ProjectDBContext_Default> _baseDapperDefault)
-                                //IBaseDapper<TestTable01DTO, ProjectDBContext_Test1> _baseDapperTest)
+        public CourseService(
+                                IBaseDapper<ProjectDBContext_Default> _baseDapperDefault
+                                //,IBaseDapper<ProjectDBContext_Test1> _baseDapperTest
+                            )
         {
             this._baseDapperDefault = _baseDapperDefault;
             //this._baseDapperTest = _baseDapperTest;
