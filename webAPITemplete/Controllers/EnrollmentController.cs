@@ -32,9 +32,9 @@ namespace webAPITemplete.Controllers
         {
             IEnumerable<EnrollmentDTO>? result = await _enrollmentServices.GetDataList();
             if (result == null)
-                return HttpResponceAdapter.Fail("查無資料");
+                return APIResponceAdapter.Fail("查無資料");
             else
-                return HttpResponceAdapter.Ok(result);
+                return APIResponceAdapter.Ok(result);
         }
 
         /// <summary>
@@ -48,9 +48,9 @@ namespace webAPITemplete.Controllers
         {
             EnrollmentDTO? result = await _enrollmentServices.GetExistedData(new EnrollmentDTO() { Id = Id });
             if (result == null)
-                return HttpResponceAdapter.Fail("查無此資料");
+                return APIResponceAdapter.Fail("查無此資料");
             else
-                return HttpResponceAdapter.Ok(result);
+                return APIResponceAdapter.Ok(result);
         }
 
         /// <summary>
@@ -64,12 +64,12 @@ namespace webAPITemplete.Controllers
         {
             //檢查Input的Student_Id、Course_Id是否存在
             if (await _studentServices.GetExistedData(new StudentDTO() { Id = Input.Student_Id }) == null || await _courseServices.GetExistedData(new CourseDTO() { Id = Input.Course_Id }) == null)
-                return HttpResponceAdapter.Fail("查無此學生/課程ID");
+                return APIResponceAdapter.Fail("查無此學生/課程ID");
 
             if (await _enrollmentServices.CreateData(Input) > 0)
-                return HttpResponceAdapter.Ok("新增成功");
+                return APIResponceAdapter.Ok("新增成功");
             else
-                return HttpResponceAdapter.Fail("新增失敗");
+                return APIResponceAdapter.Fail("新增失敗");
         }
 
         /// <summary>
@@ -83,12 +83,12 @@ namespace webAPITemplete.Controllers
         {
             //檢查Input的Student_Id、Course_Id是否存在
             if (await _studentServices.GetExistedData(new StudentDTO() { Id = Input.Student_Id }) == null || await _courseServices.GetExistedData(new CourseDTO() { Id = Input.Course_Id }) == null)
-                return HttpResponceAdapter.Fail("查無此學生/課程ID");
+                return APIResponceAdapter.Fail("查無此學生/課程ID");
 
             if (await _enrollmentServices.UpdateData(Input) > 0)
-                return HttpResponceAdapter.Ok("更新成功");
+                return APIResponceAdapter.Ok("更新成功");
             else
-                return HttpResponceAdapter.Fail("更新失敗");
+                return APIResponceAdapter.Fail("更新失敗");
         }
 
         /// <summary>
@@ -101,9 +101,9 @@ namespace webAPITemplete.Controllers
         public async Task<IActionResult> DeleteEnrollment(int Id)
         {
             if(await _enrollmentServices.DeleteData(new EnrollmentDTO() { Id = Id }) > 0)
-                return HttpResponceAdapter.Ok("刪除成功");
+                return APIResponceAdapter.Ok("刪除成功");
             else
-                return HttpResponceAdapter.Fail("刪除失敗");
+                return APIResponceAdapter.Fail("刪除失敗");
         }
     }
 }

@@ -43,14 +43,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 //註冊autofac這個容器
 builder.Host.ConfigureContainer<ContainerBuilder>(builder => builder.RegisterModule(new AutofacModuleRegister()));
-//加入 SignalR
-builder.Services.AddSignalR(options =>
-{
-    options.HandshakeTimeout = TimeSpan.FromSeconds(3);
-    options.KeepAliveInterval = TimeSpan.FromSeconds(10);
-    options.EnableDetailedErrors = true;
-});
-
 #endregion
 
 #region JWT設定
@@ -123,9 +115,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
-//加入 Hub
-app.MapHub<ChatHub>("/chatHub");
 
 app.UseHttpsRedirection();
 

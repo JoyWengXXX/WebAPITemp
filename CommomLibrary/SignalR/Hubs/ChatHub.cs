@@ -1,4 +1,5 @@
-﻿using CommomLibrary.SignalR.Hubs.interfaces;
+﻿using CommomLibrary.AppInterfaceAdapters;
+using CommomLibrary.SignalR.Hubs.interfaces;
 using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
 
@@ -132,22 +133,10 @@ namespace CommomLibrary.SignalR.Hubs
 
         public async Task SendMessage_JSON(string user, string message)
         {
-            ReponseJson responseJson = new ReponseJson();
-            responseJson.user = user;
-            responseJson.message = message;
+            HubReponseAdapter responseJson = new HubReponseAdapter();
+            responseJson.UserId = user;
+            responseJson.Message = message;
             await Clients.All.SendAsync("UpdContent", responseJson);
         }
-    }
-
-
-
-
-
-    public class ReponseJson
-    {
-        public int id { get; set; }
-        public string user { get; set; }
-        public string message { get; set; }
-        public string group { get; set; }
     }
 }

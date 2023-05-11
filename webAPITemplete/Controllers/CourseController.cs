@@ -27,9 +27,9 @@ namespace webAPITemplete.Controllers
         {
             IEnumerable<CourseDTO>? result = await _courseServices.GetDataList();
             if (result == null)
-                return HttpResponceAdapter.Fail("查無資料");
+                return APIResponceAdapter.Fail("查無資料");
             else
-                return HttpResponceAdapter.Ok(result);
+                return APIResponceAdapter.Ok(result);
         }
 
         /// <summary>
@@ -43,9 +43,9 @@ namespace webAPITemplete.Controllers
         {
             CourseDTO? result = await _courseServices.GetExistedData(new CourseDTO() { Id = Id });
             if (result == null)
-                return HttpResponceAdapter.Fail("查無此資料");
+                return APIResponceAdapter.Fail("查無此資料");
             else
-                return HttpResponceAdapter.Ok(result);
+                return APIResponceAdapter.Ok(result);
         }
 
         /// <summary>
@@ -58,9 +58,9 @@ namespace webAPITemplete.Controllers
         public async Task<IActionResult> CreateCourse(CourseDTO Input)
         {
             if(await _courseServices.CreateData(Input) > 0)
-                return HttpResponceAdapter.Ok("新增成功");
+                return APIResponceAdapter.Ok("新增成功");
             else
-                return HttpResponceAdapter.Fail("新增失敗");
+                return APIResponceAdapter.Fail("新增失敗");
         }
 
         /// <summary>
@@ -73,9 +73,9 @@ namespace webAPITemplete.Controllers
         public async Task<IActionResult> UpdateCourse(CourseDTO Input)
         {
             if(await _courseServices.UpdateData(Input) > 0)
-                return HttpResponceAdapter.Ok("更新成功");
+                return APIResponceAdapter.Ok("更新成功");
             else
-                return HttpResponceAdapter.Fail("更新失敗");
+                return APIResponceAdapter.Fail("更新失敗");
         }
 
         /// <summary>
@@ -88,9 +88,9 @@ namespace webAPITemplete.Controllers
         public async Task<IActionResult> DeleteCourse(int Id)
         {
             if(await _courseServices.DeleteData(new CourseDTO() { Id = Id }) > 0)
-                return HttpResponceAdapter.Ok("刪除成功");
+                return APIResponceAdapter.Ok("刪除成功");
             else
-                return HttpResponceAdapter.Fail("刪除失敗");
+                return APIResponceAdapter.Fail("刪除失敗");
         }
     }
 }

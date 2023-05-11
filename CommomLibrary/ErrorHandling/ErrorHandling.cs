@@ -38,11 +38,11 @@ namespace CommomLibrary.MiddleWares
                 //如果是自定義的錯誤，則回傳客製化的錯誤訊息
                 if (error is ErrorHandling.CustomExceptions.AppException)
                 {
-                    result = HttpResponceAdapter.Fail(error.Message);
+                    result = APIResponceAdapter.Fail(error.Message);
                 }
                 else
                 {
-                    result = HttpResponceAdapter.ServerFail("伺服器錯誤");
+                    result = APIResponceAdapter.ServerFail("伺服器錯誤");
                 }
                 await response.WriteAsync(JsonConvert.SerializeObject(result.Value));
             }
