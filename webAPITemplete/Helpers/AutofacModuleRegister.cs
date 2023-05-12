@@ -1,7 +1,7 @@
 ﻿using Autofac;
 using System.Reflection;
 
-namespace webAPITemplete.Helpers
+namespace WebAPITemplete.Helpers
 {
     public class AutofacModuleRegister : Autofac.Module
     {

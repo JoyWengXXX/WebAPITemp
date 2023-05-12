@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using webAPITemplete.DBContexts.EFCore;
+using WebAPITemplete.DBContexts.EFCore;
 
 #nullable disable
 
-namespace webAPITemplete.DBContexts.EFCore.Migrations.Test1
+namespace WebAPITemplete.DBContexts.EFCore.Migrations.Test1
 {
     [DbContext(typeof(ProjectDBContext_Test1))]
     [Migration("20230510065908_Initial")]

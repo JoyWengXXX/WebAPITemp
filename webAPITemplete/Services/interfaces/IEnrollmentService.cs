@@ -1,6 +1,6 @@
-﻿using webAPITemplete.Models.DTOs.DefaultDB;
+﻿using WebAPITemplete.Models.DTOs.DefaultDB;
 
-namespace webAPITemplete.Services.interfaces
+namespace WebAPITemplete.Services.interfaces
 {
     public interface IEnrollmentService : IBaseServices<EnrollmentDTO>
     {

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace webAPITemplete.DBContexts.EFCore.Migrations.Default
+namespace WebAPITemplete.DBContexts.EFCore.Migrations.Default
 {
     /// <inheritdoc />
     public partial class Initial : Migration

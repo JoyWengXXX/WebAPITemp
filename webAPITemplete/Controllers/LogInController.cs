@@ -1,8 +1,8 @@
-﻿using webAPITemplete.Authorization;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using CommomLibrary.Authorization;
 
-namespace webAPITemplete.Controllers
+namespace WebAPITemplete.Controllers
 {
     public class LogInController : ControllerBase
     {

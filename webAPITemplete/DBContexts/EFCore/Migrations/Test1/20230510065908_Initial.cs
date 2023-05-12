@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace webAPITemplete.DBContexts.EFCore.Migrations.Test1
+namespace WebAPITemplete.DBContexts.EFCore.Migrations.Test1
 {
     /// <inheritdoc />
     public partial class Initial : Migration

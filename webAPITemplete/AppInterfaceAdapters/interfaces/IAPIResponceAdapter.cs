@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace webAPITemplete.AppInterfaceAdapters.interfaces
+namespace WebAPITemplete.AppInterfaceAdapters.interfaces
 {
     public interface IAPIResponceAdapter
     {

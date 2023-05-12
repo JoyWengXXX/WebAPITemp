@@ -2,7 +2,7 @@
 using Microsoft.Data.SqlClient;
 using System.Data;
 
-namespace webAPITemplete.DBContexts.Dapper
+namespace WebAPITemplete.DBContexts.Dapper
 {
     public class ProjectDBContext_Test1 : IProjectDBContext
     {

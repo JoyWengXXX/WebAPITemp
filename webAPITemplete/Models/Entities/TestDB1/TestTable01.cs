@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
-namespace webAPITemplete.Models.Entities.TestDB1
+namespace WebAPITemplete.Models.Entities.TestDB1
 {
     /// <summary>
     /// 範例DB Table 01

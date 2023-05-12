@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace webAPITemplete.Models.DTOs.DefaultDB
+namespace WebAPITemplete.Models.DTOs.DefaultDB
 {
     public class EnrollmentDTO
     {

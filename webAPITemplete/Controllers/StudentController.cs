@@ -1,11 +1,11 @@
-﻿using webAPITemplete.Services.interfaces;
-using webAPITemplete.AppInterfaceAdapters;
+﻿using WebAPITemplete.Services.interfaces;
+using WebAPITemplete.AppInterfaceAdapters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using webAPITemplete.Models.DTOs.DefaultDB;
-using webAPITemplete.AppInterfaceAdapters.interfaces;
+using WebAPITemplete.Models.DTOs.DefaultDB;
+using WebAPITemplete.AppInterfaceAdapters.interfaces;
 
-namespace webAPITemplete.Controllers
+namespace WebAPITemplete.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

@@ -1,8 +1,8 @@
-﻿using webAPITemplete.AppInterfaceAdapters.interfaces;
+﻿using WebAPITemplete.AppInterfaceAdapters.interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
-namespace webAPITemplete.Middleware
+namespace WebAPITemplete.Middleware
 {
     /// <summary>
     /// 處理Exception發生時的步驟

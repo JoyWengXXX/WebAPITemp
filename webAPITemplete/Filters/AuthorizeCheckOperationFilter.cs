@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace webAPITemplete.Filters
+namespace WebAPITemplete.Filters
 {
     //參考:https://ithelp.ithome.com.tw/articles/10299318
     public class AuthorizeCheckOperationFilter : IOperationFilter

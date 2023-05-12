@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Reflection.Emit;
-using webAPITemplete.Models.Entities.TestDB1;
+using WebAPITemplete.Models.Entities.TestDB1;
 
-namespace webAPITemplete.DBContexts.EFCore
+namespace WebAPITemplete.DBContexts.EFCore
 {
     public class ProjectDBContext_Test1 : DbContext
     {

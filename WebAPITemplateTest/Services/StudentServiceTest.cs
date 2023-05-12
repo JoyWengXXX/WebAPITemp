@@ -1,8 +1,8 @@
 ﻿using Moq;
 using System.Net;
 using System.Numerics;
-using webAPITemplete.Models.DTOs.DefaultDB;
-using webAPITemplete.Services.interfaces;
+using WebAPITemplete.Models.DTOs.DefaultDB;
+using WebAPITemplete.Services.interfaces;
 using Xunit;
 
 namespace WebAPITemplateTest.Services

@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using webAPITemplete.Models.Entities.DefaultDB;
+using WebAPITemplete.Models.Entities.DefaultDB;
 
-namespace webAPITemplete.DBContexts.EFCore
+namespace WebAPITemplete.DBContexts.EFCore
 {
     public class ProjectDBContext_Default : DbContext
     {

@@ -1,8 +1,8 @@
-﻿using webAPITemplete.AppInterfaceAdapters.interfaces;
+﻿using WebAPITemplete.AppInterfaceAdapters.interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
-namespace webAPITemplete.AppInterfaceAdapters
+namespace WebAPITemplete.AppInterfaceAdapters
 {
     /// <summary>
     /// 定義API回傳的JSON格式

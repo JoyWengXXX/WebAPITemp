@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using webAPITemplete.DBContexts.EFCore;
+using WebAPITemplete.DBContexts.EFCore;
 
 #nullable disable
 
-namespace webAPITemplete.DBContexts.EFCore.Migrations.Default
+namespace WebAPITemplete.DBContexts.EFCore.Migrations.Default
 {
     [DbContext(typeof(ProjectDBContext_Default))]
     partial class ProjectDBContext_DefaultModelSnapshot : ModelSnapshot

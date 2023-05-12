@@ -1,6 +1,6 @@
 ﻿
 
-namespace webAPITemplete.Services.interfaces
+namespace WebAPITemplete.Services.interfaces
 {
     /// <summary>
     /// 基礎功能介面

@@ -1,12 +1,12 @@
-﻿using webAPITemplete.Services.interfaces;
+﻿using WebAPITemplete.Services.interfaces;
 using System.Text;
-using webAPITemplete.Models.DTOs.DefaultDB;
+using WebAPITemplete.Models.DTOs.DefaultDB;
 using Dapper;
 using System.Data;
-using webAPITemplete.DBContexts.Dapper;
+using WebAPITemplete.DBContexts.Dapper;
 using CommomLibrary.Dapper.Repository.interfaces;
 
-namespace webAPITemplete.Services
+namespace WebAPITemplete.Services
 {
     public class CourseService : ICourseService
     {
