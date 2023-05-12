@@ -24,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\webAPITemplete\webAPITemplete.csproj" />
+    <ProjectReference Include="..\webAPITemplete\WebAPITemplete.csproj" />
   </ItemGroup>
 
 </Project>

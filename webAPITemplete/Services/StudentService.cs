@@ -1,11 +1,10 @@
 ﻿using webAPITemplete.Services.interfaces;
 using System.Text;
-using webAPITemplete.Repository.Dapper.interfaces;
-using webAPITemplete.Repository.Dapper.DbContexts;
 using webAPITemplete.Models.DTOs.DefaultDB;
 using Dapper;
 using System.Data;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using webAPITemplete.DBContexts.Dapper;
+using CommomLibrary.Dapper.Repository.interfaces;
 
 namespace webAPITemplete.Services
 {

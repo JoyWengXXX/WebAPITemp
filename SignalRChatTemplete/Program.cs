@@ -1,6 +1,25 @@
-using CommomLibrary.SignalR.Hubs;
+using Microsoft.EntityFrameworkCore;
+using SignalRChatTemplete.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
+
+#region ORM資料庫連線
+    #region EF Core
+    builder.Services.AddDbContext<SignalRChatTemplete.DBContexts.EFCore.ProjectDBContext>(options =>
+    {
+        var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+        options.UseSqlServer(connectionString);
+    });
+    #endregion
+
+    #region Dapper
+    //註冊不同的DB連線
+    var projectDBContext_1 = new SignalRChatTemplete.DBContexts.Dapper.ProjectDBContext(builder.Configuration.GetConnectionString("DefaultConnection"));
+    builder.Services.AddSingleton(projectDBContext_1);
+    //註冊Dapper的Repository
+    builder.Services.AddScoped(typeof(CommomLibrary.Dapper.Repository.interfaces.IBaseDapper<>), typeof(CommomLibrary.Dapper.Repository.services.BaseDapper<>));
+    #endregion
+#endregion
 
 // Add services to the container.
 //加入 SignalR

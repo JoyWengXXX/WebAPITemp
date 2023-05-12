@@ -1,8 +1,9 @@
 ﻿using webAPITemplete.Services.interfaces;
-using CommomLibrary.AppInterfaceAdapters;
+using webAPITemplete.AppInterfaceAdapters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using webAPITemplete.Models.DTOs.DefaultDB;
+using webAPITemplete.AppInterfaceAdapters.interfaces;
 
 namespace webAPITemplete.Controllers
 {
@@ -11,10 +12,12 @@ namespace webAPITemplete.Controllers
     public class StudentController : ControllerBase
     {
         private readonly IStudentService _studentServices;
+        private readonly IAPIResponceAdapter _httpResponceAdapter;
 
-        public StudentController(IStudentService StudentServices)
+        public StudentController(IStudentService StudentServices, IAPIResponceAdapter httpResponceAdapter)
         {
             _studentServices = StudentServices;
+            _httpResponceAdapter = httpResponceAdapter;
         }
 
         /// <summary>
@@ -27,9 +30,9 @@ namespace webAPITemplete.Controllers
         {
             IEnumerable<StudentDTO>? result = await _studentServices.GetDataList();
             if(result == null)
-                return APIResponceAdapter.Fail("無資料");
+                return _httpResponceAdapter.Fail("無資料");
             else
-                return APIResponceAdapter.Ok(result);
+                return _httpResponceAdapter.Ok(result);
         }
         
 
@@ -44,9 +47,9 @@ namespace webAPITemplete.Controllers
         {
             StudentDTO? result = await _studentServices.GetExistedData(new StudentDTO() { Id = Id });
             if(result == null)
-                return APIResponceAdapter.Fail("無資料");
+                return _httpResponceAdapter.Fail("無資料");
             else
-                return APIResponceAdapter.Ok(result);
+                return _httpResponceAdapter.Ok(result);
         }
 
         /// <summary>
@@ -59,9 +62,9 @@ namespace webAPITemplete.Controllers
         public async Task<IActionResult> CreateStudent(StudentDTO Input)
         {
             if(await _studentServices.CreateData(Input) > 0)
-                return APIResponceAdapter.Ok("新增成功");
+                return _httpResponceAdapter.Ok("新增成功");
             else
-                return APIResponceAdapter.Fail("新增失敗");
+                return _httpResponceAdapter.Fail("新增失敗");
         }
 
         /// <summary>
@@ -74,9 +77,9 @@ namespace webAPITemplete.Controllers
         public async Task<IActionResult> UpdateStudent(StudentDTO Input)
         {
             if(await _studentServices.UpdateData(Input) > 0)
-                return APIResponceAdapter.Ok("更新成功");
+                return _httpResponceAdapter.Ok("更新成功");
             else
-                return APIResponceAdapter.Fail("更新失敗");
+                return _httpResponceAdapter.Fail("更新失敗");
         }
 
         /// <summary>
@@ -89,9 +92,9 @@ namespace webAPITemplete.Controllers
         public async Task<IActionResult> DeleteStudent(int Id)
         {
             if(await _studentServices.DeleteData(new StudentDTO() { Id = Id }) > 0)
-                return APIResponceAdapter.Ok("刪除成功");
+                return _httpResponceAdapter.Ok("刪除成功");
             else
-                return APIResponceAdapter.Fail("刪除失敗");
+                return _httpResponceAdapter.Fail("刪除失敗");
         }
     }
 }

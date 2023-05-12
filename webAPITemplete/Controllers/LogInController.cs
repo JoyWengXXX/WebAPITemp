@@ -1,4 +1,4 @@
-﻿using CommomLibrary.Authorization;
+﻿using webAPITemplete.Authorization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

@@ -3,24 +3,23 @@ using webAPITemplete.Helpers;
 using System.Reflection;
 using Microsoft.OpenApi.Models;
 using webAPITemplete.Filters;
-using CommomLibrary.Logging;
-using CommomLibrary.Authorization;
+using webAPITemplete.Logging;
+using webAPITemplete.Authorization;
 using Autofac.Extensions.DependencyInjection;
 using Autofac;
-using webAPITemplete.Services;
-using CommomLibrary.SignalR.Hubs;
+using webAPITemplete.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 #region ORM資料庫連線
     #region EF Core
-    builder.Services.AddDbContext<webAPITemplete.Repository.EFCore.ProjectDBContext_Default>(options =>
+    builder.Services.AddDbContext<webAPITemplete.DBContexts.EFCore.ProjectDBContext_Default>(options =>
     {
         var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
         options.UseSqlServer(connectionString);
     });
-    builder.Services.AddDbContext<webAPITemplete.Repository.EFCore.ProjectDBContext_Test1>(options =>
+    builder.Services.AddDbContext<webAPITemplete.DBContexts.EFCore.ProjectDBContext_Test1>(options =>
     {
         var connectionString = builder.Configuration.GetConnectionString("Test1Connection");
         options.UseSqlServer(connectionString);
@@ -29,12 +28,12 @@ var builder = WebApplication.CreateBuilder(args);
 
     #region Dapper
     //註冊不同的DB連線
-    var projectDBContext_1 = new webAPITemplete.Repository.Dapper.DbContexts.ProjectDBContext_Default(builder.Configuration.GetConnectionString("DefaultConnection"));
-    var projectDBContext_2 = new webAPITemplete.Repository.Dapper.DbContexts.ProjectDBContext_Test1(builder.Configuration.GetConnectionString("Test1Connection"));
+    var projectDBContext_1 = new webAPITemplete.DBContexts.Dapper.ProjectDBContext_Default(builder.Configuration.GetConnectionString("DefaultConnection"));
+    var projectDBContext_2 = new webAPITemplete.DBContexts.Dapper.ProjectDBContext_Test1(builder.Configuration.GetConnectionString("Test1Connection"));
     builder.Services.AddSingleton(projectDBContext_1);
     builder.Services.AddSingleton(projectDBContext_2);
     //註冊Dapper的Repository
-    builder.Services.AddScoped(typeof(webAPITemplete.Repository.Dapper.interfaces.IBaseDapper<>), typeof(webAPITemplete.Repository.Dapper.services.BaseDapper<>));
+    builder.Services.AddScoped(typeof(CommomLibrary.Dapper.Repository.interfaces.IBaseDapper<>), typeof(CommomLibrary.Dapper.Repository.services.BaseDapper<>));
     #endregion
 #endregion
 
@@ -87,7 +86,7 @@ builder.Services.AddEndpointsApiExplorer();
 var app = builder.Build();
 
 #region 註冊MiddleWare
-app.UseMiddleware<CommomLibrary.MiddleWares.ErrorHandler>();
+app.UseMiddleware<ErrorHandler>();
 #endregion
 
 #region 自動執行最新的Migration
@@ -96,8 +95,8 @@ using (var scope = app.Services.CreateScope())
     var services = scope.ServiceProvider;
     try
     {
-        var context1 = services.GetRequiredService<webAPITemplete.Repository.EFCore.ProjectDBContext_Default>();
-        var context2 = services.GetRequiredService<webAPITemplete.Repository.EFCore.ProjectDBContext_Test1>();
+        var context1 = services.GetRequiredService<webAPITemplete.DBContexts.EFCore.ProjectDBContext_Default>();
+        var context2 = services.GetRequiredService<webAPITemplete.DBContexts.EFCore.ProjectDBContext_Test1>();
         context1.Database.Migrate();
         context2.Database.Migrate();
     }

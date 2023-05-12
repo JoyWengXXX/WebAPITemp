@@ -1,9 +1,10 @@
 ﻿using webAPITemplete.Services.interfaces;
-using CommomLibrary.AppInterfaceAdapters;
+using webAPITemplete.AppInterfaceAdapters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using webAPITemplete.Models.DTOs;
 using webAPITemplete.Models.DTOs.DefaultDB;
+using webAPITemplete.AppInterfaceAdapters.interfaces;
 
 namespace webAPITemplete.Controllers
 {
@@ -14,12 +15,14 @@ namespace webAPITemplete.Controllers
         private readonly IEnrollmentService _enrollmentServices;
         private readonly IStudentService _studentServices;
         private readonly ICourseService _courseServices;
+        private readonly IAPIResponceAdapter _httpResponceAdapter;
 
-        public EnrollmentController(IEnrollmentService EnrollmentServices, IStudentService StudentServices, ICourseService CourseServices)
+        public EnrollmentController(IEnrollmentService EnrollmentServices, IStudentService StudentServices, ICourseService CourseServices, IAPIResponceAdapter httpResponceAdapter)
         {
             _enrollmentServices = EnrollmentServices;
             _studentServices = StudentServices;
             _courseServices = CourseServices;
+            _httpResponceAdapter = httpResponceAdapter;
         }
 
         /// <summary>
@@ -32,9 +35,9 @@ namespace webAPITemplete.Controllers
         {
             IEnumerable<EnrollmentDTO>? result = await _enrollmentServices.GetDataList();
             if (result == null)
-                return APIResponceAdapter.Fail("查無資料");
+                return _httpResponceAdapter.Fail("查無資料");
             else
-                return APIResponceAdapter.Ok(result);
+                return _httpResponceAdapter.Ok(result);
         }
 
         /// <summary>
@@ -48,9 +51,9 @@ namespace webAPITemplete.Controllers
         {
             EnrollmentDTO? result = await _enrollmentServices.GetExistedData(new EnrollmentDTO() { Id = Id });
             if (result == null)
-                return APIResponceAdapter.Fail("查無此資料");
+                return _httpResponceAdapter.Fail("查無此資料");
             else
-                return APIResponceAdapter.Ok(result);
+                return _httpResponceAdapter.Ok(result);
         }
 
         /// <summary>
@@ -64,12 +67,12 @@ namespace webAPITemplete.Controllers
         {
             //檢查Input的Student_Id、Course_Id是否存在
             if (await _studentServices.GetExistedData(new StudentDTO() { Id = Input.Student_Id }) == null || await _courseServices.GetExistedData(new CourseDTO() { Id = Input.Course_Id }) == null)
-                return APIResponceAdapter.Fail("查無此學生/課程ID");
+                return _httpResponceAdapter.Fail("查無此學生/課程ID");
 
             if (await _enrollmentServices.CreateData(Input) > 0)
-                return APIResponceAdapter.Ok("新增成功");
+                return _httpResponceAdapter.Ok("新增成功");
             else
-                return APIResponceAdapter.Fail("新增失敗");
+                return _httpResponceAdapter.Fail("新增失敗");
         }
 
         /// <summary>
@@ -83,12 +86,12 @@ namespace webAPITemplete.Controllers
         {
             //檢查Input的Student_Id、Course_Id是否存在
             if (await _studentServices.GetExistedData(new StudentDTO() { Id = Input.Student_Id }) == null || await _courseServices.GetExistedData(new CourseDTO() { Id = Input.Course_Id }) == null)
-                return APIResponceAdapter.Fail("查無此學生/課程ID");
+                return _httpResponceAdapter.Fail("查無此學生/課程ID");
 
             if (await _enrollmentServices.UpdateData(Input) > 0)
-                return APIResponceAdapter.Ok("更新成功");
+                return _httpResponceAdapter.Ok("更新成功");
             else
-                return APIResponceAdapter.Fail("更新失敗");
+                return _httpResponceAdapter.Fail("更新失敗");
         }
 
         /// <summary>
@@ -101,9 +104,9 @@ namespace webAPITemplete.Controllers
         public async Task<IActionResult> DeleteEnrollment(int Id)
         {
             if(await _enrollmentServices.DeleteData(new EnrollmentDTO() { Id = Id }) > 0)
-                return APIResponceAdapter.Ok("刪除成功");
+                return _httpResponceAdapter.Ok("刪除成功");
             else
-                return APIResponceAdapter.Fail("刪除失敗");
+                return _httpResponceAdapter.Fail("刪除失敗");
         }
     }
 }
