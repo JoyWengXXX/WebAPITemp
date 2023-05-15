@@ -38,7 +38,8 @@ namespace CommomLibrary.Authorization
                   options.TokenValidationParameters = new TokenValidationParameters
                   {
                       // 可以讓[Authorize]判斷角色
-                      RoleClaimType = "roles",
+                      NameClaimType = ClaimTypes.NameIdentifier,
+                      RoleClaimType = ClaimTypes.Role,
                       // 預設會認證發行人
                       ValidateIssuer = true,
                       ValidIssuer = builder.Configuration.GetValue<string>("JwtSettings:Issuer"),
@@ -66,7 +67,12 @@ namespace CommomLibrary.Authorization
             this.settings = settings.CurrentValue;
         }
 
-        public string GenerateToken(string userName)
+        /// <summary>
+        /// 產生JWT Token
+        /// </summary>
+        /// <param name="userID"></param>
+        /// <returns></returns>
+        public string GenerateToken(int userID, string userName, string role)
         {
             //發行人
             var issuer = settings.Issuer;
@@ -79,21 +85,21 @@ namespace CommomLibrary.Authorization
                         //加密key
                         .WithSecret(signKey)
                         //角色
-                        .AddClaim("roles", "admin")
+                        .AddClaim(ClaimTypes.Role, role)
                         //JWT ID
-                        .AddClaim("jti", Guid.NewGuid().ToString())
+                        .AddClaim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                         //發行人
-                        .AddClaim("iss", issuer)
+                        .AddClaim(JwtRegisteredClaimNames.Iss, issuer)
                         //使用對象名稱
-                        .AddClaim("sub", userName) // User.Identity.Name
-                                                   //過期時間
-                        .AddClaim("exp", DateTimeOffset.UtcNow.AddHours(settings.ExpireTimeInHour).ToUnixTimeSeconds())
+                        .AddClaim(JwtRegisteredClaimNames.Sub, userID)
+                        //過期時間
+                        .AddClaim(JwtRegisteredClaimNames.Exp, DateTimeOffset.UtcNow.AddHours(settings.ExpireTimeInHour).ToUnixTimeSeconds())
                         //此時間以前是不可以使用
-                        .AddClaim("nbf", DateTimeOffset.UtcNow.ToUnixTimeSeconds())
+                        .AddClaim(JwtRegisteredClaimNames.Nbf, DateTimeOffset.UtcNow.ToUnixTimeSeconds())
                         //發行時間
-                        .AddClaim("iat", DateTimeOffset.UtcNow.ToUnixTimeSeconds())
+                        .AddClaim(JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds())
                         //使用者全名
-                        .AddClaim(ClaimTypes.Name, userName)
+                        .AddClaim(JwtRegisteredClaimNames.Name, userName)
                         //進行編碼
                         .Encode();
             return token;

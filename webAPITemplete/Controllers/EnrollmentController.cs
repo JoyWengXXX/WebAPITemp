@@ -30,7 +30,7 @@ namespace WebAPITemplete.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetEnrollments()
         {
             IEnumerable<EnrollmentDTO>? result = await _enrollmentServices.GetDataList();
@@ -46,7 +46,7 @@ namespace WebAPITemplete.Controllers
         /// <param name="Id"></param>
         /// <returns></returns>
         [HttpGet("{Id}")]
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetEnrollment(int Id)
         {
             EnrollmentDTO? result = await _enrollmentServices.GetExistedData(new EnrollmentDTO() { Id = Id });
@@ -62,7 +62,7 @@ namespace WebAPITemplete.Controllers
         /// <param name="Input"></param>
         /// <returns></returns>
         [HttpPost]
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateEnrollment(EnrollmentDTO Input)
         {
             //檢查Input的Student_Id、Course_Id是否存在
@@ -81,7 +81,7 @@ namespace WebAPITemplete.Controllers
         /// <param name="Input"></param>
         /// <returns></returns>
         [HttpPut]
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateEnrollment(EnrollmentDTO Input)
         {
             //檢查Input的Student_Id、Course_Id是否存在
@@ -100,7 +100,7 @@ namespace WebAPITemplete.Controllers
         /// <param name="Id"></param>
         /// <returns></returns>
         [HttpDelete("{Id}")]
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteEnrollment(int Id)
         {
             if(await _enrollmentServices.DeleteData(new EnrollmentDTO() { Id = Id }) > 0)

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
-namespace SignalRChatTemplete.Models.Entities
+namespace SignalRTemplete.Models.Entities.DefaultDB
 {
     /// <summary>
     /// 使用者資料
@@ -14,7 +14,7 @@ namespace SignalRChatTemplete.Models.Entities
         [Key]
         [Required]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int SerialID { get; set; }
+        public int SerialNum { get; set; }
 
         /// <summary>
         /// 使用者編號
@@ -23,6 +23,12 @@ namespace SignalRChatTemplete.Models.Entities
         [Required]
         [StringLength(20)]
         public string UserID { get; set; }
+
+        /// <summary>
+        /// 腳色權限編號
+        /// </summary>
+        [Required]
+        public int RoleID { get; set; }
 
         /// <summary>
         /// 使用者姓
@@ -53,13 +59,13 @@ namespace SignalRChatTemplete.Models.Entities
         /// 使用者電話
         /// </summary>
         [StringLength(12)]
-        public string Phone { get; set; }
+        public string? Phone { get; set; }
 
         /// <summary>
         /// 使用者信箱
         /// </summary>
         [StringLength(254)]
-        public string Email { get; set; }
+        public string? Email { get; set; }
 
         /// <summary>
         /// 是否啟用

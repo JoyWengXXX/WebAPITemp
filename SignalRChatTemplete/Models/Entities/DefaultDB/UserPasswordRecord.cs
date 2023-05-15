@@ -1,12 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace SignalRChatTemplete.Models.Entities
+namespace SignalRTemplete.Models.Entities.DefaultDB
 {
     /// <summary>
-    /// 聊天紀錄
+    /// 使用者密碼紀錄
     /// </summary>
-    public class ChatRecord
+    public class UserPasswordRecord
     {
         /// <summary>
         /// 流水編號
@@ -15,32 +15,27 @@ namespace SignalRChatTemplete.Models.Entities
         [Required]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int SerialNum { get; set; }
-
         /// <summary>
-        /// 群組編號
+        /// 使用者流水編號
         /// </summary>
         [Required]
-        public int GroupID { get; set; }
-
+        public int UserInfoSerialNum { get; set; }
         /// <summary>
-        /// 使用者編號
+        /// 密碼
         /// </summary>
         [Required]
-        public int UserID { get; set; }
-
+        [StringLength(50)]
+        public string Password { get; set; }
         /// <summary>
-        /// 訊息
+        /// 是否啟用
         /// </summary>
         [Required]
-        [StringLength(5000)]
-        public string Text { get; set; }
-
+        public bool IsEnable { get; set; }
         /// <summary>
         /// 建立者
         /// </summary>
         [Required]
         public int CreateBy { get; set; }
-
         /// <summary>
         /// 建立時間
         /// </summary>

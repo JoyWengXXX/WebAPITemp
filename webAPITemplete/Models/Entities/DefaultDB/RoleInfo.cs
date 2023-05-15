@@ -1,50 +1,42 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace SignalRChatTemplete.Models.Entities
+namespace WebAPITemplete.Models.Entities.DefaultDB
 {
-    /// <summary>
-    /// 使用者群組
-    /// </summary>
-    public class UserGroupInfo
+    public class RoleInfo
     {
         /// <summary>
-        /// 群組編號
+        /// 腳色權限編號
         /// </summary>
         [Key]
         [Required]
-        public int GroupID { get; set; }
-
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int RoleID { get; set; }
         /// <summary>
-        /// 使用者編號
-        /// </summary>
-        [Key]
-        [Required]
-        public int UserInfoSerialNum { get; set; }
-
-        /// <summary>
-        /// 是否有效
+        /// 腳色權限名稱
         /// </summary>
         [Required]
-        public bool IsValid { get; set; }
-
+        [StringLength(200)]
+        public string RoleName { get; set; }
+        /// <summary>
+        /// 是否啟用
+        /// </summary>
+        [Required]
+        public bool IsEnable { get; set; }
         /// <summary>
         /// 建立者
         /// </summary>
         [Required]
         public int CreateBy { get; set; }
-
         /// <summary>
         /// 建立時間
         /// </summary>
         [Required]
         public DateTime CreateOn { get; set; }
-
         /// <summary>
         /// 更新者
         /// </summary>
         public int? UpdateBy { get; set; }
-
         /// <summary>
         /// 更新時間
         /// </summary>

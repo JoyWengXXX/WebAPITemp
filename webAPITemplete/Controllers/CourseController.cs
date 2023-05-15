@@ -25,7 +25,7 @@ namespace WebAPITemplete.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetCourses()
         {
             IEnumerable<CourseDTO>? result = await _courseServices.GetDataList();
@@ -41,7 +41,7 @@ namespace WebAPITemplete.Controllers
         /// <param name="Id"></param>
         /// <returns></returns>
         [HttpGet("{Id}")]
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetCourse(int Id)
         {
             CourseDTO? result = await _courseServices.GetExistedData(new CourseDTO() { Id = Id });
@@ -57,7 +57,7 @@ namespace WebAPITemplete.Controllers
         /// <param name="Input"></param>
         /// <returns></returns>
         [HttpPost]
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateCourse(CourseDTO Input)
         {
             if(await _courseServices.CreateData(Input) > 0)
@@ -72,7 +72,7 @@ namespace WebAPITemplete.Controllers
         /// <param name="Input"></param>
         /// <returns></returns>
         [HttpPut]
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateCourse(CourseDTO Input)
         {
             if(await _courseServices.UpdateData(Input) > 0)
@@ -87,7 +87,7 @@ namespace WebAPITemplete.Controllers
         /// <param name="Id"></param>
         /// <returns></returns>
         [HttpDelete("{Id}")]
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteCourse(int Id)
         {
             if(await _courseServices.DeleteData(new CourseDTO() { Id = Id }) > 0)

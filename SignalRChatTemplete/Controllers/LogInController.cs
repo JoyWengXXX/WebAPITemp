@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using CommomLibrary.Authorization;
-using WebAPITemplete.Services.interfaces;
-using WebAPITemplete.Models.DTOs.DefaultDB;
+using SignalRChatTemplete.Services.interfaces;
 using System.IdentityModel.Tokens.Jwt;
+using SignalRTemplete.Models.DTOs.DefaultDB;
 
-namespace WebAPITemplete.Controllers
+namespace SignalRChatTemplete.Controllers
 {
     public class LogInController : ControllerBase
     {
@@ -22,13 +22,13 @@ namespace WebAPITemplete.Controllers
         /// 取得TOKEN
         /// </summary>
         /// <param name="UserID"></param>
-        /// <param name="Password"></param> 
+        /// <param name="Password"></param>
         /// <returns></returns>
-        [HttpGet("Login"), AllowAnonymous]
+        [HttpPost("Login"), AllowAnonymous]
         public async Task<IActionResult> Login(string UserID, string Password)
         {
             UserInfoDTO userInfo = await _userInfoService.GetUserInfo(UserID, Password);
-            if(userInfo == null)
+            if (userInfo == null)
                 return BadRequest("帳號或密碼錯誤");
             string token = _jwtHelpers.GenerateToken(userInfo.SerialNum, userInfo.UserID, userInfo.RoleName);
             return Ok(token);

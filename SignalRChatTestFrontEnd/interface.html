@@ -1,39 +1,5 @@
 <h1>即時聊天範例</h1>
 
-<div class="row">
-    <div class="col-8">
-        <h4>個人 ID: <span id="SelfID"></span></h4>
-        <div class="mb-3">
-            <label for="message" class="form-label">發送訊息</label>
-            <input type="text" class="form-control" id="message">
-        </div>
-        <div class="mb-3">
-            <label for="sendToID" class="form-label">指定 ID</label>
-            <input type="text" class="form-control" id="sendToID">
-        </div>
-        <button type="button" class="btn btn-primary" id="sendButton">傳送訊息</button>
-		
-		
-		<div class="mb-3">
-            <label for="groupName" class="form-label">群組名稱</label>
-            <input type="text" class="form-control" id="groupName">
-        </div>
-        <button type="button" class="btn btn-primary" id="joinGroupButton">加入</button>
-        <button type="button" class="btn btn-primary" id="leaveGroupButton">退出</button>
-		
-		<div class="mb-3">
-            <label for="sendToGroup" class="form-label">指定 Group</label>
-            <input type="text" class="form-control" id="sendToGroup">
-        </div>
-        <button type="button" class="btn btn-primary" id="GroupSendButton">傳送群組訊息</button>
-    </div>
-    <div class="col-4">
-        <h4>連線 ID 列表</h4>
-        <ul class="list-group" id="IDList">
-        </ul>
-    </div>
-</div>
-
 <div class="row mt-3">
     <div class="col-12">
         <h3>聊天內容</h3>
@@ -45,9 +11,10 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 <script>
-	var connection = new signalR.HubConnectionBuilder().withUrl("http://localhost:64252/chatHub", {
+	var connection = new signalR.HubConnectionBuilder().withUrl("https://localhost:44372/chatHub", {
 																  skipNegotiation: true,
-																  transport: signalR.HttpTransportType.WebSockets
+																  transport: signalR.HttpTransportType.WebSockets,
+																  accessTokenFactory: () => ""
 																}).build();
 
 	//與Server建立連線
@@ -67,62 +34,8 @@
 		}
 	});
 
-	// 更新用戶個人連線 ID 事件
-	connection.on("UpdSelfID", function (id) {
-		$('#SelfID').html(id);
-	});
-
 	// 更新聊天內容事件
 	connection.on("UpdContent", function (msg) {
 		$("#Content").append($("<li></li>").attr("class", "list-group-item").text(msg));
-	});
-
-	//傳送訊息
-	$('#sendButton').on('click', function() {
-		let selfID = $('#SelfID').html();
-		let message = $('#message').val();
-		let sendToID = $('#sendToID').val();
-		connection.invoke("SendMessage", selfID, message, sendToID).catch(function (err) {
-			alert('傳送錯誤: ' + err.toString());
-		});
-	});
-	
-	//--------------------------------------------------------------------------------------------//
-	
-	//加入群組
-	$('#joinGroupButton').on('click', function() {
-		let selfID = $('#SelfID').html();
-		let group_name = $('#groupName').val();
-		connection.invoke("JoinGroup", selfID, group_name).catch(function (err) {
-			alert('傳送錯誤: ' + err.toString());
-		});
-	});
-	
-	//離開群組
-	$('#leaveGroupButton').on('click', function() {
-		let selfID = $('#SelfID').html();
-		let group_name = $('#groupName').val();
-		connection.invoke("LeaveGroup", selfID, group_name).catch(function (err) {
-			alert('傳送錯誤: ' + err.toString());
-		});
-	});
-	
-	//群組傳送訊息
-	$('#GroupSendButton').on('click', function() {
-		let selfID = $('#SelfID').html();
-		let message = $('#message').val();
-		let sendToGroup = $('#sendToGroup').val();
-		connection.invoke("SendGroupMessage", selfID, message, sendToGroup).catch(function (err) {
-			alert('傳送錯誤: ' + err.toString());
-		});
-	});
-	
-	//取得JSON形式的回傳
-	$('#sendButton').on('click', function() {
-		let selfID = $('#SelfID').html();
-		let message = $('#message').val();
-		connection.invoke("SendMessage_JSON", selfID, message).catch(function (err) {
-			alert('傳送錯誤: ' + err.toString());
-		});
 	});
 </script>

@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using WebAPITemplete.Helpers;
 using System.Reflection;
 using Microsoft.OpenApi.Models;
 using WebAPITemplete.Filters;
@@ -8,6 +7,11 @@ using Autofac;
 using WebAPITemplete.Middleware;
 using CommomLibrary.Authorization;
 using CommomLibrary.Logging;
+using CommomLibrary.Dapper.Repository.interfaces;
+using WebAPITemplete.DBContexts.Dapper;
+using WebAPITemplete.AppInterfaceAdapters.interfaces;
+using WebAPITemplete.AppInterfaceAdapters;
+using CommomLibrary.AutofacHelper;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -41,7 +45,12 @@ var builder = WebApplication.CreateBuilder(args);
 //初始化並建立一個實例
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 //註冊autofac這個容器
-builder.Host.ConfigureContainer<ContainerBuilder>(builder => builder.RegisterModule(new AutofacModuleRegister()));
+builder.Host.ConfigureContainer<ContainerBuilder>(builder => builder.RegisterModule(new AutofacModuleRegister("WebAPITemplete.Services", Assembly.GetExecutingAssembly())));
+
+//註冊其他介面
+builder.Services.AddScoped<IProjectDBContext, ProjectDBContext_Default>();
+builder.Services.AddScoped<IProjectDBContext, ProjectDBContext_Test1>();
+builder.Services.AddScoped<IAPIResponceAdapter, APIResponceAdapter>();
 #endregion
 
 #region JWT設定
