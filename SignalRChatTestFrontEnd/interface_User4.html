@@ -1,0 +1,100 @@
+<h1>即時聊天範例</h1>
+
+<div class="row">
+    <div class="col-8">
+        <h4>個人 ID: <span id="SelfID"></span></h4>
+        <div class="mb-3">
+            <label for="message" class="form-label">發送訊息</label>
+            <input type="text" class="form-control" id="message">
+        </div>
+        <div class="mb-3">
+            <label for="sendToID" class="form-label">指定 ID</label>
+            <input type="text" class="form-control" id="sendToID">
+        </div>
+        <button type="button" class="btn btn-primary" id="sendButton">傳送訊息</button>
+		
+		<div class="mb-3">
+            <label for="GroupID" class="form-label">群組ID</label>
+            <input type="text" class="form-control" id="GroupID">
+        </div>
+        <button type="button" class="btn btn-primary" id="joinButton">加入群組</button>
+        <button type="button" class="btn btn-primary" id="leaveButton">離開群組</button>
+    </div>
+    <div class="col-4">
+        <h4>連線 ID 列表</h4>
+        <ul class="list-group" id="IDList">
+        </ul>
+    </div>
+</div>
+
+<div class="row mt-3">
+    <div class="col-12">
+        <h3>聊天內容</h3>
+        <ul class="list-group" id="Content">
+        </ul>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script>
+	var connection = new signalR.HubConnectionBuilder().withUrl("https://localhost:44372/chatHub", {
+																  skipNegotiation: true,
+																  transport: signalR.HttpTransportType.WebSockets,
+																  accessTokenFactory: () => "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJBZG1pbiIsImp0aSI6ImEyMmJlYWIxLWVkYWMtNDdhOS1hM2VjLWFlZTk4NzNjZThjZCIsImlzcyI6IkpPWSIsInN1YiI6NSwiZXhwIjoxNjg0MjU5MTEwLCJuYmYiOjE2ODQyMjMxMTAsImlhdCI6MTY4NDIyMzExMCwibmFtZSI6IkFkbWluMDQifQ.e5dKbOFMQ5WqyToQuPTGs8ItLzDzQfYaVSxfBXknOw8"
+																}).build();
+
+	//與Server建立連線
+	connection.start().then(function () {
+		console.log("Hub 連線完成");
+	}).catch(function (err) {
+		alert('連線錯誤: ' + err.toString());
+	});
+
+	// 更新連線 ID 列表事件
+	connection.on("UpdList", function (jsonList) {
+		var list = JSON.parse(jsonList);
+		$("#IDList li").remove();
+		for(i=0; i<list.length; i++)
+		{
+			$("#IDList").append($("<li></li>").attr("class", "list-group-item").text(list[i]));
+		}
+	});
+	
+	// 更新用戶個人連線 ID 事件
+        connection.on("UpdSelfID", function (id) {
+            $('#SelfID').html(id);
+        });
+
+	// 更新聊天內容事件
+	connection.on("UpdContent", function (jsonObj) {
+		$("#Content").append($("<li></li>").attr("class", "list-group-item").text(jsonObj.userName + '說:' + jsonObj.message + '(' + jsonObj.sendTime + ')'));
+	});
+	
+	//傳送訊息
+	$('#sendButton').on('click', function() {
+		let message = $('#message').val();
+		let sendToID = parseInt($('#sendToID').val());
+		let sendToGroupID = parseInt($('#GroupID').val());
+		console.log('{"Message":"' + message + '","ToGroupID":"' + sendToGroupID + '","ToUserID":"' + sendToID + '"}')
+		var input = JSON.parse('{"Message":"' + message + '","ToGroupID":"' + sendToGroupID + '","ToUserID":"' + sendToID + '"}');
+		connection.invoke("SendMessage", input).catch(function (err) {
+			alert('傳送錯誤: ' + err.toString());
+		});
+	});
+	
+	//加入群組
+	$('#joinButton').on('click', function() {
+		let groupID = $('#GroupID').val();
+		connection.invoke("JoinGroup", groupID).catch(function (err) {
+			alert('傳送錯誤: ' + err.toString());
+		});
+	});
+	//離開群組
+	$('#joinButton').on('click', function() {
+		let groupID = $('#GroupID').val();
+		connection.invoke("LeaveGroup", groupID).catch(function (err) {
+			alert('傳送錯誤: ' + err.toString());
+		});
+	});
+</script>

@@ -2,6 +2,7 @@
 using Dapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
+using Newtonsoft.Json;
 using SignalRChatTemplete.DBContexts.Dapper;
 using SignalRChatTemplete.Models.DTOs;
 using SignalRChatTemplete.Models.Entities;
@@ -35,6 +36,7 @@ namespace SignalRChatTemplete.Hubs
         /// <returns></returns>
         public override async Task OnConnectedAsync()
         {
+            HubCallerContext context = this.Context;
             //檢查線上連線樹是否超過設定
             if (ConnIDList.Count > ConnectionLimit)
             {
@@ -44,7 +46,13 @@ namespace SignalRChatTemplete.Hubs
             // 取得連線ID
             string connID = Context.ConnectionId;
             // 取得使用者ID
-            string userID = Context.User.Claims.Where(x => x.Type == JwtRegisteredClaimNames.Sub).Select(x => x.Value).FirstOrDefault();
+            int userID = Convert.ToInt32(Context.User.Claims.Where(x => x.Type == JwtRegisteredClaimNames.Sub).Select(x => x.Value).FirstOrDefault());
+            string userName = Context.User.Claims.Where(x => x.Type == JwtRegisteredClaimNames.Name).Select(x => x.Value).FirstOrDefault();
+            // 更新個人 ID
+            await Clients.Client(Context.ConnectionId).SendAsync("UpdSelfID", $"使用者:{userName}({userID})");
+            // 更新連線 ID 列表
+            string jsonString = JsonConvert.SerializeObject(ConnIDList);
+            await Clients.All.SendAsync("UpdList", jsonString);
             // 更新連線ID
             ConnIDList.Add(Convert.ToInt32(userID), connID);
             await base.OnConnectedAsync();
@@ -58,79 +66,71 @@ namespace SignalRChatTemplete.Hubs
         public override async Task OnDisconnectedAsync(Exception ex)
         {
             // 取得使用者ID
-            string userID = Context.User.Identity.Name;
+            int userID = Convert.ToInt32(Context.User.Claims.Where(x => x.Type == JwtRegisteredClaimNames.Sub).Select(x => x.Value).FirstOrDefault());
             // 移除連線ID
-            ConnIDList.Remove(Convert.ToInt32(userID));
+            ConnIDList.Remove(userID);
             await base.OnDisconnectedAsync(ex);
         }
 
         /// <summary>
-        /// 全頻訊息
+        /// 傳送訊息
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        public async Task SendGlobeMessage(SendMessageDTO input)
+        public async Task SendMessage(SendMessageDTO input)
         {
-            if (ConnIDList.Any(x => x.Key == input.UserID))
+            int userID = Convert.ToInt16(Context.User.Claims.Where(x => x.Type == JwtRegisteredClaimNames.Sub).Select(x => x.Value).FirstOrDefault());
+            string userName = Context.User.Claims.Where(x => x.Type == JwtRegisteredClaimNames.Name).Select(x => x.Value).FirstOrDefault();
+            if (ConnIDList.Any(x => x.Key == userID))
             {
-                ResponceDTO responce = new ResponceDTO()
+                //私訊
+                if (input.ToUserID != null && ConnIDList.Any(x => x.Key == input.ToUserID))
                 {
-                    UserID = input.UserID,
-                    UserName = "",//要在快取中取得名稱
-                    Message = input.Message,
-                    SendTime = DateTime.Now
-                };
-                await Clients.All.SendAsync("UpdContent", responce);
-            }
-        }
-        /// <summary>
-        /// 群組訊息
-        /// </summary>
-        /// <param name="input"></param>
-        /// <returns></returns>
-        public async Task SendGroupMessage(SendGroupMessageDTO input)
-        {
-            if (ConnIDList.Any(x => x.Key == input.UserID) && AvalibleGroupIDList.Any(x => x.Key == input.ToGroupID))
-            {
-                ResponceDTO responce = new ResponceDTO()
+                    ResponceDTO responce = new ResponceDTO()
+                    {
+                        UserID = userID,
+                        UserName = userName,
+                        Message = input.Message,
+                        SendTime = DateTime.Now
+                    };
+                    await Clients.Client(ConnIDList.First(x => x.Key == input.ToUserID).Value).SendAsync("UpdContent", responce);
+                }
+                //群聊
+                if (input.ToGroupID != null && AvalibleGroupIDList.Any(x => x.Key == input.ToGroupID))
                 {
-                    UserID = input.UserID,
-                    UserName = ConnIDList.First(x => x.Key == input.UserID).Value,
-                    Message = input.Message,
-                    SendTime = DateTime.Now
-                };
-                await Clients.Group(AvalibleGroupIDList.First(x => x.Key == input.ToGroupID).Value).SendAsync("UpdContent", responce);
-            }
-        }
-        /// <summary>
-        /// 私人訊息
-        /// </summary>
-        /// <param name="input"></param>
-        /// <returns></returns>
-        public async Task SendPrivateMessage(SendPrivateMessageDTO input)
-        {
-            if (ConnIDList.Any(x => x.Key == input.UserID) && ConnIDList.Any(x => x.Key == input.ToUserID))
-            {
-                ResponceDTO responce = new ResponceDTO()
+                    ResponceDTO responce = new ResponceDTO()
+                    {
+                        UserID = userID,
+                        UserName = userName,
+                        Message = input.Message,
+                        SendTime = DateTime.Now
+                    };
+                    await Clients.Group(AvalibleGroupIDList.First(x => x.Key == input.ToGroupID).Value).SendAsync("UpdContent", responce);
+                }
+                //廣播
+                if (input.ToUserID == null && input.ToGroupID == null)
                 {
-                    UserID = input.UserID,
-                    UserName = ConnIDList.First(x => x.Key == input.UserID).Value,
-                    Message = input.Message,
-                    SendTime = DateTime.Now
-                };
-                await Clients.Client(ConnIDList.First(x => x.Key == input.ToUserID).Value).SendAsync("UpdContent", responce);
+                    ResponceDTO responce = new ResponceDTO()
+                    {
+                        UserID = userID,
+                        UserName = userName,
+                        Message = input.Message,
+                        SendTime = DateTime.Now
+                    };
+                    await Clients.All.SendAsync("UpdContent", responce);
+                }
             }
         }
 
         /// <summary>
         /// 加入群組
         /// </summary>
-        /// <param name="UserID"></param>
         /// <param name="ToUserID"></param>
         /// <returns></returns>
-        public async Task JoinGroup(int UserID, int ToUserID)
+        public async Task JoinGroup(int ToUserID)
         {
-            if (ConnIDList.Any(x => x.Key == UserID) && AvalibleGroupIDList.Any(x => x.Key == ToUserID))
+            int userID = Convert.ToInt16(Context.User.Claims.Where(x => x.Type == JwtRegisteredClaimNames.Sub).Select(x => x.Value).FirstOrDefault());
+            if (ConnIDList.Any(x => x.Key == userID) && AvalibleGroupIDList.Any(x => x.Key == ToUserID))
             {
                 await Groups.AddToGroupAsync(Context.ConnectionId, AvalibleGroupIDList.First(x => x.Key == ToUserID).Value);
                 // 更新聊天內容
@@ -141,12 +141,12 @@ namespace SignalRChatTemplete.Hubs
         /// <summary>
         /// 離開群組
         /// </summary>
-        /// <param name="UserID"></param>
         /// <param name="ToUserID"></param>
         /// <returns></returns>
-        public async Task LeaveGroup(int UserID, int ToUserID)
+        public async Task LeaveGroup(int ToUserID)
         {
-            if (ConnIDList.Any(x => x.Key == UserID) && AvalibleGroupIDList.Any(x => x.Key == ToUserID))
+            int userID = Convert.ToInt16(Context.User.Claims.Where(x => x.Type == JwtRegisteredClaimNames.Sub).Select(x => x.Value).FirstOrDefault());
+            if (ConnIDList.Any(x => x.Key == userID) && AvalibleGroupIDList.Any(x => x.Key == ToUserID))
             {
                 await Groups.RemoveFromGroupAsync(Context.ConnectionId, AvalibleGroupIDList.First(x => x.Key == ToUserID).Value);
                 // 更新聊天內容

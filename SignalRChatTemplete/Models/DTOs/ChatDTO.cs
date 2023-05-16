@@ -10,31 +10,18 @@ namespace SignalRChatTemplete.Models.DTOs
     public class SendMessageDTO
     {
         /// <summary>
-        /// 用戶ID
-        /// </summary>
-        [Required]
-        public int UserID { get; set; }
-        /// <summary>
         /// 傳送訊息
         /// </summary>
         [Required]
         public string Message { get; set; }
-    }
-    public class SendGroupMessageDTO : SendMessageDTO
-    {
         /// <summary>
         /// 傳送訊息至群組ID
         /// </summary>
-        [Required]
-        public int ToGroupID { get; set; }
-    }
-    public class SendPrivateMessageDTO : SendMessageDTO
-    {
+        public int? ToGroupID { get; set; }
         /// <summary>
         /// 傳送訊息至某用戶
         /// </summary>
-        [Required]
-        public int ToUserID { get; set; }
+        public int? ToUserID { get; set; }
     }
 
     /// <summary>

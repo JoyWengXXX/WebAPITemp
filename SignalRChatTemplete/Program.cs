@@ -13,6 +13,7 @@ using CommomLibrary.Dapper.Repository.interfaces;
 using SignalRChatTemplete.DBContexts.Dapper;
 using SignalRChatTemplete.AppInterfaceAdapters.interfaces;
 using SignalRChatTemplete.AppInterfaceAdapters;
+using SignalRTemplete.Hubs.interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -45,13 +46,16 @@ builder.Host.ConfigureContainer<ContainerBuilder>(builder => builder.RegisterMod
 builder.Services.AddScoped<IProjectDBContext, ProjectDBContext_Default>();
 builder.Services.AddScoped<IProjectDBContext, ProjectDBContext_SignalR>();
 builder.Services.AddScoped<IAPIResponceAdapter, APIResponceAdapter>();
+builder.Services.AddScoped<IChatHub, ChatHub>();
 //加入 SignalR
-builder.Services.AddSignalR(options =>
-{
-    options.HandshakeTimeout = TimeSpan.FromHours(1); //設定握手逾時時間
-    options.KeepAliveInterval = TimeSpan.FromMinutes(10); //設定握手激活時間
-    options.EnableDetailedErrors = true; //啟用詳細錯誤
-});
+builder.Services.AddSignalR(
+    //options =>
+    //{
+    //    options.HandshakeTimeout = TimeSpan.FromDays(1); //設定握手逾時時間
+    //    options.KeepAliveInterval = TimeSpan.FromHours(1); //設定握手激活時間
+    //    options.EnableDetailedErrors = true; //啟用詳細錯誤
+    //}
+);
 #region JWT設定
 JWTAuthorizationSetting.JWTSetting(builder);
 #endregion
