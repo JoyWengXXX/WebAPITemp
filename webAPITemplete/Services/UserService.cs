@@ -7,11 +7,11 @@ using WebAPITemplete.Services.interfaces;
 
 namespace WebAPITemplete.Services
 {
-    public class UserInfoService : IUserInfoService
+    public class UserService : IUserService
     {
         private readonly IDbConnection _dbConnection;
 
-        public UserInfoService(IBaseDapper<ProjectDBContext_Default> baseDapperDefault)
+        public UserService(IBaseDapper<ProjectDBContext_Default> baseDapperDefault)
         {
             _dbConnection = baseDapperDefault.CreateConnection();
         }
@@ -22,7 +22,7 @@ namespace WebAPITemplete.Services
         /// <param name="UserID"></param>
         /// <param name="Password"></param>
         /// <returns></returns>
-        public async Task<UserInfoDTO> GetUserInfo(string UserID, string Password)
+        public async Task<UserDTO> GetUserInfo(string UserID, string Password)
         {
             var sql = @"SELECT U.SerialNum,
                                U.UserID,
@@ -34,7 +34,7 @@ namespace WebAPITemplete.Services
                         INNER JOIN UserPasswordRecord UP ON U.SerialNum = UP.UserInfoSerialNum AND UP.IsEnable = 1
                         LEFT JOIN RoleInfo R ON U.RoleID = R.RoleID AND R.IsEnable = 1
                         WHERE U.UserID = @UserID AND UP.Password = @Password AND U.IsEnable = 1";
-            return await _dbConnection.QuerySingleOrDefaultAsync<UserInfoDTO>(sql, new { UserID = UserID, Password = Password });
+            return await _dbConnection.QuerySingleOrDefaultAsync<UserDTO>(sql, new { UserID = UserID, Password = Password });
         }
     }
 }

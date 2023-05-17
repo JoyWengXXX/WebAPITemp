@@ -2,7 +2,7 @@
 
 namespace WebAPITemplete.Models.DTOs.DefaultDB
 {
-    public class UserInfoDTO 
+    public class UserDTO 
     {
         public int SerialNum { get; set; }
         public string UserID { get; set; }

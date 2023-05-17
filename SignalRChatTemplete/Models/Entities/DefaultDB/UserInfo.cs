@@ -25,7 +25,7 @@ namespace SignalRTemplete.Models.Entities.DefaultDB
         public string UserID { get; set; }
 
         /// <summary>
-        /// 腳色權限編號
+        /// 角色權限編號
         /// </summary>
         [Required]
         public int RoleID { get; set; }

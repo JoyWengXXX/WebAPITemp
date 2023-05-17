@@ -6,7 +6,7 @@ namespace WebAPITemplete.Models.Entities.DefaultDB
     /// <summary>
     /// 使用者資料
     /// </summary>
-    public class UserInfo
+    public class User
     {
         /// <summary>
         /// 使用者編號
@@ -19,13 +19,12 @@ namespace WebAPITemplete.Models.Entities.DefaultDB
         /// <summary>
         /// 使用者編號
         /// </summary>
-        [Key]
         [Required]
         [StringLength(20)]
         public string UserID { get; set; }
 
         /// <summary>
-        /// 腳色權限編號
+        /// 角色權限編號
         /// </summary>
         [Required]
         public int RoleID { get; set; }

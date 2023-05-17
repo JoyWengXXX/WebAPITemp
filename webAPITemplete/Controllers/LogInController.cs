@@ -10,9 +10,9 @@ namespace WebAPITemplete.Controllers
     public class LogInController : ControllerBase
     {
         private readonly JwtHelper _jwtHelpers;
-        private readonly IUserInfoService _userInfoService;
+        private readonly IUserService _userInfoService;
 
-        public LogInController(JwtHelper jwtHelpers, IUserInfoService userInfoService)
+        public LogInController(JwtHelper jwtHelpers, IUserService userInfoService)
         {
             _jwtHelpers = jwtHelpers;
             _userInfoService = userInfoService;
@@ -27,7 +27,7 @@ namespace WebAPITemplete.Controllers
         [HttpGet("Login"), AllowAnonymous]
         public async Task<IActionResult> Login(string UserID, string Password)
         {
-            UserInfoDTO userInfo = await _userInfoService.GetUserInfo(UserID, Password);
+            UserDTO userInfo = await _userInfoService.GetUserInfo(UserID, Password);
             if(userInfo == null)
                 return BadRequest("帳號或密碼錯誤");
             string token = _jwtHelpers.GenerateToken(userInfo.SerialNum, userInfo.UserID, userInfo.RoleName);

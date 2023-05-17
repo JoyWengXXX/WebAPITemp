@@ -1,23 +1,28 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace SignalRTemplete.Models.Entities.DefaultDB
+namespace WebAPITemplete.Models.Entities.DefaultDB
 {
-    public class RoleInfo
+    public class System
     {
         /// <summary>
-        /// 角色權限編號
+        /// 功能頁編號
         /// </summary>
         [Key]
         [Required]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int RoleID { get; set; }
+        public int SystemID { get; set; }
         /// <summary>
-        /// 角色權限名稱
+        /// 功能頁名稱
         /// </summary>
         [Required]
-        [StringLength(200)]
-        public string RoleName { get; set; }
+        [StringLength(20)]
+        public string SystemName { get; set; }
+        /// <summary>
+        /// 備註
+        /// </summary>
+        [StringLength(50)]
+        public string? Memo { get; set; }
         /// <summary>
         /// 是否啟用
         /// </summary>

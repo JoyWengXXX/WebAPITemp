@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace SignalRTemplete.Models.Entities.DefaultDB
+namespace WebAPITemplete.Models.Entities.DefaultDB
 {
-    public class RoleInfo
+    public class Role
     {
         /// <summary>
         /// 角色權限編號
@@ -18,6 +18,11 @@ namespace SignalRTemplete.Models.Entities.DefaultDB
         [Required]
         [StringLength(200)]
         public string RoleName { get; set; }
+        /// <summary>
+        /// 是否為最高權限
+        /// </summary>
+        [Required]
+        public bool IsAdminRole { get; set; }
         /// <summary>
         /// 是否啟用
         /// </summary>

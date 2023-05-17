@@ -2,7 +2,8 @@
 
 namespace WebAPITemplete.Services.interfaces
 {
-    public interface IStudentService : IBaseServices<StudentDTO>
+    public interface IUserService
     {
+        Task<UserDTO> GetUserInfo(string UserID, string Password);
     }
 }

@@ -3,30 +3,29 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebAPITemplete.Models.Entities.DefaultDB
 {
-    public class Enrollment
+    public class Permission
     {
         /// <summary>
-        /// ID
+        /// 角色權限編號
         /// </summary>
         [Key]
         [Required]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+        public int RoleID { get; set; }
         /// <summary>
-        /// 學生ID
+        /// 功能頁編號
+        /// </summary>
+        [Key]
+        [Required]
+        public int PageID { get; set; }
+        /// <summary>
+        /// 建立者
         /// </summary>
         [Required]
-        [ForeignKey("Student_Id")]
-        public Student Student { get; set; }
+        public int CreateBy { get; set; }
         /// <summary>
-        /// 課程ID
+        /// 建立時間
         /// </summary>
         [Required]
-        [ForeignKey("Course_Id")]
-        public Course Course { get; set; }
-        /// <summary>
-        /// 註冊日期
-        /// </summary>
-        public DateTime Enrollment_Date { get; set; }
+        public DateTime CreateOn { get; set; }
     }
 }

@@ -3,26 +3,32 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebAPITemplete.Models.Entities.DefaultDB
 {
-    public class RoleInfo
+    public class Page
     {
         /// <summary>
-        /// 腳色權限編號
+        /// 功能頁編號
         /// </summary>
         [Key]
         [Required]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int RoleID { get; set; }
+        public int PageID { get; set; }
         /// <summary>
-        /// 腳色權限名稱
+        /// 所屬系統編號
+        /// </summary>
+        [Key]
+        [Required]
+        public int SystemID { get; set; }
+        /// <summary>
+        /// 功能頁名稱
         /// </summary>
         [Required]
-        [StringLength(200)]
-        public string RoleName { get; set; }
+        [StringLength(30)]
+        public string PageName { get; set; }
         /// <summary>
-        /// 是否啟用
+        /// 上層功能頁編號
         /// </summary>
         [Required]
-        public bool IsEnable { get; set; }
+        public int ParentPageID { get; set; }
         /// <summary>
         /// 建立者
         /// </summary>

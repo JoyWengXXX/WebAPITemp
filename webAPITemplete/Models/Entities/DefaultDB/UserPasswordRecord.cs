@@ -19,7 +19,7 @@ namespace WebAPITemplete.Models.Entities.DefaultDB
         /// 使用者流水編號
         /// </summary>
         [Required]
-        public int UserInfoSerialNum { get; set; }
+        public int UserSerialNum { get; set; }
         /// <summary>
         /// 密碼
         /// </summary>
