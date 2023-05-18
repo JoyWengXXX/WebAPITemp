@@ -72,7 +72,7 @@ namespace CommomLibrary.Authorization
         /// </summary>
         /// <param name="userID"></param>
         /// <returns></returns>
-        public string GenerateToken(int userID, string userName, string role)
+        public string GenerateToken(int userID, string userName, int roleID)
         {
             //發行人
             var issuer = settings.Issuer;
@@ -85,7 +85,7 @@ namespace CommomLibrary.Authorization
                         //加密key
                         .WithSecret(signKey)
                         //角色
-                        .AddClaim(ClaimTypes.Role, role)
+                        .AddClaim(ClaimTypes.Role, roleID)
                         //JWT ID
                         .AddClaim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                         //發行人
@@ -100,6 +100,8 @@ namespace CommomLibrary.Authorization
                         .AddClaim(JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds())
                         //使用者全名
                         .AddClaim(JwtRegisteredClaimNames.Name, userName)
+                        //使用者角色ID
+                        .AddClaim("role", roleID)
                         //進行編碼
                         .Encode();
             return token;
