@@ -23,19 +23,12 @@ var builder = WebApplication.CreateBuilder(args);
         var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
         options.UseSqlServer(connectionString);
     });
-    builder.Services.AddDbContext<WebAPITemplete.DBContexts.EFCore.ProjectDBContext_Test1>(options =>
-    {
-        var connectionString = builder.Configuration.GetConnectionString("Test1Connection");
-        options.UseSqlServer(connectionString);
-    });
 #endregion
 
     #region Dapper
     //註冊不同的DB連線
     var projectDBContext_1 = new WebAPITemplete.DBContexts.Dapper.ProjectDBContext_Default(builder.Configuration.GetConnectionString("DefaultConnection"));
-    var projectDBContext_2 = new WebAPITemplete.DBContexts.Dapper.ProjectDBContext_Test1(builder.Configuration.GetConnectionString("Test1Connection"));
     builder.Services.AddSingleton(projectDBContext_1);
-    builder.Services.AddSingleton(projectDBContext_2);
     //註冊Dapper的Repository
     builder.Services.AddScoped(typeof(CommomLibrary.Dapper.Repository.interfaces.IBaseDapper<>), typeof(CommomLibrary.Dapper.Repository.services.BaseDapper<>));
     #endregion
@@ -45,11 +38,11 @@ var builder = WebApplication.CreateBuilder(args);
 //初始化並建立一個實例
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 //註冊autofac這個容器
-builder.Host.ConfigureContainer<ContainerBuilder>(builder => builder.RegisterModule(new AutofacModuleRegister("WebAPITemplete.Services", Assembly.GetExecutingAssembly())));
+builder.Host.ConfigureContainer<ContainerBuilder>(builder => builder.RegisterModule(new AutofacModuleRegister("WebAPITemplete.Services", "Service", Assembly.GetExecutingAssembly())));
+builder.Host.ConfigureContainer<ContainerBuilder>(builder => builder.RegisterModule(new AutofacModuleRegister("WebAPITemplete.Models.Mapper", "Mapper", Assembly.GetExecutingAssembly())));
 
 //註冊其他介面
 builder.Services.AddScoped<IProjectDBContext, ProjectDBContext_Default>();
-builder.Services.AddScoped<IProjectDBContext, ProjectDBContext_Test1>();
 builder.Services.AddScoped<IAPIResponceAdapter, APIResponceAdapter>();
 #endregion
 
@@ -105,9 +98,7 @@ using (var scope = app.Services.CreateScope())
     try
     {
         var context1 = services.GetRequiredService<WebAPITemplete.DBContexts.EFCore.ProjectDBContext_Default>();
-        var context2 = services.GetRequiredService<WebAPITemplete.DBContexts.EFCore.ProjectDBContext_Test1>();
         context1.Database.Migrate();
-        context2.Database.Migrate();
     }
     catch (Exception ex)
     {

@@ -241,6 +241,118 @@ namespace WebAPITemplete.DBContexts.EFCore.Migrations
                     b.HasData(
                         new
                         {
+                            RoleID = 1,
+                            PageID = 1,
+                            CreateBy = 0,
+                            CreateOn = new DateTime(2023, 5, 14, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            RoleID = 1,
+                            PageID = 2,
+                            CreateBy = 0,
+                            CreateOn = new DateTime(2023, 5, 14, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            RoleID = 1,
+                            PageID = 3,
+                            CreateBy = 0,
+                            CreateOn = new DateTime(2023, 5, 14, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            RoleID = 1,
+                            PageID = 4,
+                            CreateBy = 0,
+                            CreateOn = new DateTime(2023, 5, 14, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            RoleID = 1,
+                            PageID = 5,
+                            CreateBy = 0,
+                            CreateOn = new DateTime(2023, 5, 14, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            RoleID = 1,
+                            PageID = 6,
+                            CreateBy = 0,
+                            CreateOn = new DateTime(2023, 5, 14, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            RoleID = 1,
+                            PageID = 7,
+                            CreateBy = 0,
+                            CreateOn = new DateTime(2023, 5, 14, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            RoleID = 1,
+                            PageID = 8,
+                            CreateBy = 0,
+                            CreateOn = new DateTime(2023, 5, 14, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            RoleID = 1,
+                            PageID = 9,
+                            CreateBy = 0,
+                            CreateOn = new DateTime(2023, 5, 14, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            RoleID = 1,
+                            PageID = 10,
+                            CreateBy = 0,
+                            CreateOn = new DateTime(2023, 5, 14, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            RoleID = 1,
+                            PageID = 11,
+                            CreateBy = 0,
+                            CreateOn = new DateTime(2023, 5, 14, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            RoleID = 1,
+                            PageID = 12,
+                            CreateBy = 0,
+                            CreateOn = new DateTime(2023, 5, 14, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            RoleID = 1,
+                            PageID = 13,
+                            CreateBy = 0,
+                            CreateOn = new DateTime(2023, 5, 14, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            RoleID = 1,
+                            PageID = 14,
+                            CreateBy = 0,
+                            CreateOn = new DateTime(2023, 5, 14, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            RoleID = 1,
+                            PageID = 15,
+                            CreateBy = 0,
+                            CreateOn = new DateTime(2023, 5, 14, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            RoleID = 1,
+                            PageID = 16,
+                            CreateBy = 0,
+                            CreateOn = new DateTime(2023, 5, 14, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
                             RoleID = 2,
                             PageID = 1,
                             CreateBy = 0,

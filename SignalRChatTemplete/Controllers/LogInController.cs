@@ -30,7 +30,7 @@ namespace SignalRChatTemplete.Controllers
             UserInfoDTO userInfo = await _userInfoService.GetUserInfo(UserID, Password);
             if (userInfo == null)
                 return BadRequest("帳號或密碼錯誤");
-            string token = _jwtHelpers.GenerateToken(userInfo.SerialNum, userInfo.UserID, userInfo.RoleName);
+            string token = _jwtHelpers.GenerateToken(userInfo.SerialNum, userInfo.UserID, userInfo.RoleID);
             return Ok(token);
         }
 

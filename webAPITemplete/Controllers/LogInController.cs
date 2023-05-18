@@ -4,18 +4,21 @@ using CommomLibrary.Authorization;
 using WebAPITemplete.Services.interfaces;
 using WebAPITemplete.Models.DTOs.DefaultDB;
 using System.IdentityModel.Tokens.Jwt;
+using WebAPITemplete.AppInterfaceAdapters.interfaces;
 
 namespace WebAPITemplete.Controllers
 {
     public class LogInController : ControllerBase
     {
         private readonly JwtHelper _jwtHelpers;
-        private readonly IUserService _userInfoService;
+        private readonly ILogInService _logInService;
+        private readonly IAPIResponceAdapter _aPIResponceAdapter;
 
-        public LogInController(JwtHelper jwtHelpers, IUserService userInfoService)
+        public LogInController(JwtHelper jwtHelpers, ILogInService logInService, IAPIResponceAdapter aPIResponceAdapter)
         {
             _jwtHelpers = jwtHelpers;
-            _userInfoService = userInfoService;
+            _logInService = logInService;
+            _aPIResponceAdapter = aPIResponceAdapter;
         }
 
         /// <summary>
@@ -24,21 +27,14 @@ namespace WebAPITemplete.Controllers
         /// <param name="UserID"></param>
         /// <param name="Password"></param> 
         /// <returns></returns>
-        [HttpGet("Login"), AllowAnonymous]
+        [HttpPost("Login"), AllowAnonymous]
         public async Task<IActionResult> Login(string UserID, string Password)
         {
-            UserDTO userInfo = await _userInfoService.GetUserInfo(UserID, Password);
-            if(userInfo == null)
+            UserDTO User = await _logInService.LogIn(UserID, Password);
+            if (User == null)
                 return BadRequest("帳號或密碼錯誤");
-            string token = _jwtHelpers.GenerateToken(userInfo.SerialNum, userInfo.UserID, userInfo.RoleName);
-            return Ok(token);
-        }
-
-        [HttpGet("Username")]
-        [Authorize(Roles = "Admin,User")]
-        public ActionResult<string> Username()
-        {
-            return Ok(User.Claims.Where(x => x.Type == JwtRegisteredClaimNames.Sub).Select(x => x.Value).FirstOrDefault());
+            string Token = _jwtHelpers.GenerateToken(User.SerialNum, User.UserID, User.RoleID);
+            return _aPIResponceAdapter.Ok(Token);
         }
     }
 }
