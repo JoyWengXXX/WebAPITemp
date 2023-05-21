@@ -46,8 +46,8 @@ namespace SignalRChatTemplete.Hubs
             // 取得連線ID
             string connID = Context.ConnectionId;
             // 取得使用者ID
-            int userID = Convert.ToInt32(Context.User.Claims.Where(x => x.Type == JwtRegisteredClaimNames.Sub).Select(x => x.Value).FirstOrDefault());
-            string userName = Context.User.Claims.Where(x => x.Type == JwtRegisteredClaimNames.Name).Select(x => x.Value).FirstOrDefault();
+            int userID = Int32.Parse(Context.User.Claims.Where(x => x.Type == JwtRegisteredClaimNames.Sub).FirstOrDefault().Value);
+            string userName = Context.User.Claims.Where(x => x.Type == JwtRegisteredClaimNames.Name).FirstOrDefault().Value;
             // 更新個人 ID
             await Clients.Client(Context.ConnectionId).SendAsync("UpdSelfID", $"使用者:{userName}({userID})");
             // 更新連線 ID 列表
@@ -66,7 +66,7 @@ namespace SignalRChatTemplete.Hubs
         public override async Task OnDisconnectedAsync(Exception ex)
         {
             // 取得使用者ID
-            int userID = Convert.ToInt32(Context.User.Claims.Where(x => x.Type == JwtRegisteredClaimNames.Sub).Select(x => x.Value).FirstOrDefault());
+            int userID = Int32.Parse(Context.User.Claims.Where(x => x.Type == JwtRegisteredClaimNames.Sub).FirstOrDefault().Value);
             // 移除連線ID
             ConnIDList.Remove(userID);
             await base.OnDisconnectedAsync(ex);
@@ -79,8 +79,8 @@ namespace SignalRChatTemplete.Hubs
         /// <returns></returns>
         public async Task SendMessage(SendMessageDTO input)
         {
-            int userID = Convert.ToInt16(Context.User.Claims.Where(x => x.Type == JwtRegisteredClaimNames.Sub).Select(x => x.Value).FirstOrDefault());
-            string userName = Context.User.Claims.Where(x => x.Type == JwtRegisteredClaimNames.Name).Select(x => x.Value).FirstOrDefault();
+            int userID = Int32.Parse(Context.User.Claims.Where(x => x.Type == JwtRegisteredClaimNames.Sub).FirstOrDefault().Value);
+            string userName = Context.User.Claims.Where(x => x.Type == JwtRegisteredClaimNames.Name).FirstOrDefault().Value;
             if (ConnIDList.Any(x => x.Key == userID))
             {
                 //私訊
@@ -129,7 +129,7 @@ namespace SignalRChatTemplete.Hubs
         /// <returns></returns>
         public async Task JoinGroup(int ToUserID)
         {
-            int userID = Convert.ToInt16(Context.User.Claims.Where(x => x.Type == JwtRegisteredClaimNames.Sub).Select(x => x.Value).FirstOrDefault());
+            int userID = Int32.Parse(Context.User.Claims.Where(x => x.Type == JwtRegisteredClaimNames.Sub).FirstOrDefault().Value);
             if (ConnIDList.Any(x => x.Key == userID) && AvalibleGroupIDList.Any(x => x.Key == ToUserID))
             {
                 await Groups.AddToGroupAsync(Context.ConnectionId, AvalibleGroupIDList.First(x => x.Key == ToUserID).Value);
@@ -145,7 +145,7 @@ namespace SignalRChatTemplete.Hubs
         /// <returns></returns>
         public async Task LeaveGroup(int ToUserID)
         {
-            int userID = Convert.ToInt16(Context.User.Claims.Where(x => x.Type == JwtRegisteredClaimNames.Sub).Select(x => x.Value).FirstOrDefault());
+            int userID = Int32.Parse(Context.User.Claims.Where(x => x.Type == JwtRegisteredClaimNames.Sub).FirstOrDefault().Value);
             if (ConnIDList.Any(x => x.Key == userID) && AvalibleGroupIDList.Any(x => x.Key == ToUserID))
             {
                 await Groups.RemoveFromGroupAsync(Context.ConnectionId, AvalibleGroupIDList.First(x => x.Key == ToUserID).Value);

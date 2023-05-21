@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using CommomLibrary.Authorization;
 using SignalRChatTemplete.Services.interfaces;
-using System.IdentityModel.Tokens.Jwt;
 using SignalRTemplete.Models.DTOs.DefaultDB;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace SignalRChatTemplete.Controllers
 {
@@ -30,7 +30,7 @@ namespace SignalRChatTemplete.Controllers
             UserInfoDTO userInfo = await _userInfoService.GetUserInfo(UserID, Password);
             if (userInfo == null)
                 return BadRequest("帳號或密碼錯誤");
-            string token = _jwtHelpers.GenerateToken(userInfo.SerialNum, userInfo.UserID, userInfo.RoleID);
+            string token = _jwtHelpers.GenerateToken(new JwtTokenOptions { UserSerialNum = userInfo.SerialNum, UserName = userInfo.FirstName + userInfo.LastName });
             return Ok(token);
         }
 
@@ -38,7 +38,7 @@ namespace SignalRChatTemplete.Controllers
         [Authorize(Roles = "Admin,User")]
         public ActionResult<string> Username()
         {
-            return Ok(User.Claims.Where(x => x.Type == JwtRegisteredClaimNames.Sub).Select(x => x.Value).FirstOrDefault());
+            return Ok(User.Claims.Where(x => x.Type == JwtRegisteredClaimNames.Sub).FirstOrDefault());
         }
     }
 }

@@ -1,11 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using CommomLibrary.Authorization;
 using WebAPITemplete.Services.interfaces;
-using WebAPITemplete.Models.DTOs.DefaultDB;
-using System.IdentityModel.Tokens.Jwt;
 using WebAPITemplete.AppInterfaceAdapters.interfaces;
 using WebAPITemplete.Models.ViewModels;
+using System.Security.Claims;
 
 namespace WebAPITemplete.Controllers
 {
@@ -28,7 +26,7 @@ namespace WebAPITemplete.Controllers
         [Authorize]
         public async Task<IActionResult> GetMenuPages()
         {
-            int RoleID = int.Parse(User.Claims.Where(x => x.Type == "role").FirstOrDefault(x => x.Type == "role").Value);
+            int RoleID = int.Parse(User.Claims.Where(x => x.Type == ClaimTypes.Role).FirstOrDefault().Value);
             List<MenuTreeViewModel> MenuPages = await _pageService.GetMenuPages(RoleID);
             return _aPIResponceAdapter.Ok(MenuPages);
         }

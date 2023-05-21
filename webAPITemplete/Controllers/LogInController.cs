@@ -33,7 +33,7 @@ namespace WebAPITemplete.Controllers
             UserDTO User = await _logInService.LogIn(UserID, Password);
             if (User == null)
                 return BadRequest("帳號或密碼錯誤");
-            string Token = _jwtHelpers.GenerateToken(User.SerialNum, User.UserID, User.RoleID);
+            string Token = _jwtHelpers.CreateToken(new JwtTokenOptions { UserSerialNum = User.SerialNum, UserName = User.UserID, RoleID = User.RoleID });
             return _aPIResponceAdapter.Ok(Token);
         }
     }

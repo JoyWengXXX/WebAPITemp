@@ -29,7 +29,7 @@ namespace WebAPITemplete.Services
                         FROM [dbo].[User] U
                         INNER JOIN UserPasswordRecord UP ON U.SerialNum = UP.UserSerialNum AND UP.IsEnable = 1
                         LEFT JOIN Role R ON U.RoleID = R.RoleID AND R.IsEnable = 1
-                        WHERE U.UserID = @UserID AND U.Password = @Password AND U.IsEnable = 1";
+                        WHERE U.UserID = @UserID AND UP.Password = @Password AND U.IsEnable = 1";
             return await _dbConnection.QuerySingleOrDefaultAsync<UserDTO>(sql, new { UserID, Password });
         }
 

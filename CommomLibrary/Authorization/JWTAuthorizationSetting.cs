@@ -1,11 +1,11 @@
 ﻿using JWT.Algorithms;
 using JWT.Builder;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using System.ComponentModel.DataAnnotations;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -27,11 +27,11 @@ namespace CommomLibrary.Authorization
             builder.Services.AddSingleton<JwtHelper>();
             //使用選項模式註冊
             builder.Services.Configure<JwtSettingsOptions>(
-                builder.Configuration.GetSection("JwtSettings"));
+            builder.Configuration.GetSection("JwtSettings"));
             //設定認證方式
             builder.Services
               //使用bearer token方式認證並且token用jwt格式
-              .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+              .AddAuthentication()
               .AddJwtBearer(options => {
                   // 當驗證失敗時，回應標頭會包含 WWW-Authenticate 標頭，這裡會顯示失敗的詳細錯誤原因
                   options.IncludeErrorDetails = true; // 預設值為 true，有時會特別關閉
@@ -69,10 +69,12 @@ namespace CommomLibrary.Authorization
 
         /// <summary>
         /// 產生JWT Token
+        /// 參考>https://blog.miniasp.com/post/2022/02/13/How-to-use-JWT-token-based-auth-in-aspnet-core-60的做法
+        /// 感覺太長了改用下面的CreateToken()
         /// </summary>
-        /// <param name="userID"></param>
+        /// <param name="options"></param>
         /// <returns></returns>
-        public string GenerateToken(int userID, string userName, int roleID)
+        private string GenerateToken(JwtTokenOptions options)
         {
             //發行人
             var issuer = settings.Issuer;
@@ -81,17 +83,17 @@ namespace CommomLibrary.Authorization
             //建立JWT - Token
             var token = JwtBuilder.Create()
                         //所採用的雜湊演算法
-                        .WithAlgorithm(new HMACSHA256Algorithm())
+                        .WithAlgorithm(new HMACSHA512Algorithm())
                         //加密key
                         .WithSecret(signKey)
                         //角色
-                        .AddClaim(ClaimTypes.Role, roleID)
+                        .AddClaim(ClaimTypes.Role, options.RoleID)
                         //JWT ID
                         .AddClaim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                         //發行人
                         .AddClaim(JwtRegisteredClaimNames.Iss, issuer)
                         //使用對象名稱
-                        .AddClaim(JwtRegisteredClaimNames.Sub, userID)
+                        .AddClaim(JwtRegisteredClaimNames.Sub, options.UserSerialNum)
                         //過期時間
                         .AddClaim(JwtRegisteredClaimNames.Exp, DateTimeOffset.UtcNow.AddHours(settings.ExpireTimeInHour).ToUnixTimeSeconds())
                         //此時間以前是不可以使用
@@ -99,19 +101,75 @@ namespace CommomLibrary.Authorization
                         //發行時間
                         .AddClaim(JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds())
                         //使用者全名
-                        .AddClaim(JwtRegisteredClaimNames.Name, userName)
-                        //使用者角色ID
-                        .AddClaim("role", roleID)
+                        .AddClaim(JwtRegisteredClaimNames.Name, options.UserName)
                         //進行編碼
                         .Encode();
             return token;
         }
+
+        /// <summary>
+        /// 產生JWT Token
+        /// </summary>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        public string CreateToken(JwtTokenOptions options)
+        {
+            List<Claim> Claims = new List<Claim> { 
+                new Claim(ClaimTypes.NameIdentifier, options.UserSerialNum.ToString()),
+                new Claim(ClaimTypes.Name, options.UserName),
+                new Claim(ClaimTypes.Role, options.RoleID.ToString()),
+            }; 
+
+            var Key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(settings.SignKey));
+            var Token = new JwtSecurityToken(
+                                                issuer: settings.Issuer, //發行人
+                                                audience: null,
+                                                claims: Claims, //JWT屬性
+                                                expires: DateTime.Now.AddHours(settings.ExpireTimeInHour), //過期時間
+                                                notBefore: DateTime.Now, //此時間以前是不可以使用
+                                                signingCredentials: new SigningCredentials(Key, SecurityAlgorithms.HmacSha512Signature) //加密key
+                                            );
+
+            var JWTToken = new JwtSecurityTokenHandler().WriteToken(Token);
+
+            return JWTToken;
+        }
     }
+
+
     //將appsetting轉為強行別所使用
     public class JwtSettingsOptions
     {
+        /// <summary>
+        /// TOKEN發行人
+        /// </summary>
         public string Issuer { get; set; } = "";
+        /// <summary>
+        /// 加密的key
+        /// </summary>
         public string SignKey { get; set; } = "";
+        /// <summary>
+        /// 過期時間(小時)
+        /// </summary>
         public int ExpireTimeInHour { get; set; } = 0;
+    }
+    //Token生成時需要設定的入參
+    public class JwtTokenOptions
+    {
+        /// <summary>
+        /// 使用者帳號
+        /// </summary>
+        [Required]
+        public int UserSerialNum { get; set; }
+        /// <summary>
+        /// 使用者名稱
+        /// </summary>
+        [Required]
+        public string UserName { get; set; }
+        /// <summary>
+        /// 使用者角色ID
+        /// </summary>
+        [Required]
+        public int RoleID { get; set; }
     }
 }

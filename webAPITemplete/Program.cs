@@ -54,6 +54,9 @@ JWTAuthorizationSetting.JWTSetting(builder);
 builder.Services.AddSwaggerGen(options => {
     //使Swagger可以讀取註解
     // using System.Reflection;
+    // 專案檔點兩下，會開啟專案的xml檔案，額外加入兩行xml資料，目的是要透過編譯器產生文件檔案，加入下面兩段到<PropertyGroup></PropertyGroup>中
+    //<GenerateDocumentationFile>true</GenerateDocumentationFile>
+    //<NoWarn>$(NoWarn); 1591 </NoWarn>
     var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
 
@@ -116,8 +119,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-app.UseAuthentication();
 
 app.UseAuthorization();
 
