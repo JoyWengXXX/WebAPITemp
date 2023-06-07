@@ -35,9 +35,9 @@ namespace CommomLibrary.Logging
             {
                 Log.Fatal(ex, "Host terminated unexpectedly");
             }
-            finally 
-            { 
-                Log.CloseAndFlush(); 
+            finally
+            {
+                Log.CloseAndFlush();
             }
         }
 
@@ -45,65 +45,30 @@ namespace CommomLibrary.Logging
         /// 註冊Serilog寫進Elasticsearch中
         /// </summary>
         /// <param name="builder"></param>
-        /// <param name="environment"></param>
-        public static void UseSerilogWithElasticsearchSetting(this WebApplicationBuilder builder, string environment, string elasticsearchUrl)
+        public static void UseSerilogWithElasticsearchSetting(this WebApplicationBuilder builder)
         {
-            //var configuration = new ConfigurationBuilder()
-            //.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-            //.AddJsonFile($"appsettings.{environment}.json", optional: true)
-            //.Build();
-
-            //ConfigureLogging(environment, configuration, elasticsearchUrl);
-
-            //try
-            //{
-            //    Log.Information("Starting host.");
-            //    builder.Host.UseSerilog();
-            //}
-            //catch (Exception ex)
-            //{
-            //    Log.Fatal(ex, "Host failure.");
-            //}
-            //finally
-            //{
-            //    Log.CloseAndFlush();
-            //}
+            string environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
             var configuration = new ConfigurationBuilder()
-            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-            .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json", optional: true)
-            .Build();
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .AddJsonFile(
+                    $"appsettings.{environment}.json",
+                    optional: true)
+                .Build();
+
             Log.Logger = new LoggerConfiguration()
                 .Enrich.FromLogContext()
-                .Enrich.WithExceptionDetails()
+                .Enrich.WithEnvironmentName()
                 .WriteTo.Debug()
                 .WriteTo.Console()
-                .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(elasticsearchUrl))
+                .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(configuration["ElasticSearch:Url"]))
                 {
                     AutoRegisterTemplate = true,
-                    IndexFormat = $"{Assembly.GetExecutingAssembly().GetName().Name.ToLower().Replace(".", "-")}-{environment?.ToLower().Replace(".", "-")}-{DateTime.UtcNow:yyyy-MM-dd hh:mm:ss}"
+                    IndexFormat = $"{Assembly.GetExecutingAssembly().GetName().Name?.ToLower().Replace(".", "-")}-{environment?.ToLower().Replace(".", "-")}-{DateTime.UtcNow:yyyy-MM}"
                 })
-                .Enrich.WithProperty("Environment", environment)
+                .Enrich.WithProperty("Environment", environment!)
                 .ReadFrom.Configuration(configuration)
                 .CreateLogger();
             builder.Host.UseSerilog();
-        }
-        private static void ConfigureLogging(string environment, IConfigurationRoot configuration, string elasticsearchUrl)
-        {
-            Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-                .Enrich.FromLogContext()
-                .Enrich.WithEnvironmentName()
-                .Enrich.WithMachineName()
-                .WriteTo.Console()
-                .WriteTo.Debug()
-                .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(elasticsearchUrl))
-                {
-                    AutoRegisterTemplate = true,
-                    AutoRegisterTemplateVersion = AutoRegisterTemplateVersion.ESv8,
-                    IndexFormat = $"{Assembly.GetExecutingAssembly().GetName().Name!.ToLower().Replace(".", "-")}-{environment?.ToLower().Replace(".", "-")}-{DateTime.Now:yyyy-MM-dd HH:mm:ss}"
-                })
-                .ReadFrom.Configuration(configuration)
-                .CreateLogger();
         }
     }
 }

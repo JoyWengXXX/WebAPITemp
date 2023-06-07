@@ -11,8 +11,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SignalRTemp", "SignalRChatT
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebAPITempTest", "WebAPITempTest\WebAPITempTest.csproj", "{126EBC6A-B212-4965-BDDC-A89ED25476AA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ElasticsearchWithKibanaTemp", "ElasticsearchWithKibanaTemp\ElasticsearchWithKibanaTemp.csproj", "{A7BE4724-A827-40F2-A202-E1B832525843}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,10 +33,6 @@ Global
 		{126EBC6A-B212-4965-BDDC-A89ED25476AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{126EBC6A-B212-4965-BDDC-A89ED25476AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{126EBC6A-B212-4965-BDDC-A89ED25476AA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A7BE4724-A827-40F2-A202-E1B832525843}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A7BE4724-A827-40F2-A202-E1B832525843}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A7BE4724-A827-40F2-A202-E1B832525843}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A7BE4724-A827-40F2-A202-E1B832525843}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

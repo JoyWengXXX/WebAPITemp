@@ -5,7 +5,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
 <Project>
   <PropertyGroup>
     <_PublishTargetUrl>D:\Joy\程式專案\webAPITemp\WebAPITemp\bin\Release\net7.0\publish\</_PublishTargetUrl>
-    <History>True|2023-05-23T15:52:35.9262093Z;</History>
+    <History>True|2023-05-25T16:33:03.9010273Z;True|2023-05-24T22:43:19.5265617+08:00;True|2023-05-24T22:42:37.0044312+08:00;True|2023-05-23T23:52:35.9262093+08:00;</History>
     <LastFailureDetails />
   </PropertyGroup>
 </Project>

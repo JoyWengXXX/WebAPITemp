@@ -12,6 +12,12 @@ using webAPITemp.DBContexts.Dapper;
 using webAPITemp.AppInterfaceAdapters.interfaces;
 using webAPITemp.AppInterfaceAdapters;
 using CommomLibrary.AutofacHelper;
+using Serilog.Sinks.Elasticsearch;
+using Serilog;
+using System;
+using Serilog.Exceptions;
+using Microsoft.AspNetCore.Hosting;
+using Serilog.Events;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -81,8 +87,9 @@ builder.Services.AddSwaggerGen(options => {
 #endregion
 
 #region ¶i¦æSerilogªºµù¥U
-//SerilogSettingExtensions.UseSerilogSetting(builder);
-SerilogSettingExtensions.UseSerilogWithElasticsearchSetting(builder, Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"), builder.Configuration.GetValue<string>("ElasticSearch:Url"));
+SerilogSettingExtensions.UseSerilogSetting(builder);
+SerilogSettingExtensions.UseSerilogWithElasticsearchSetting(builder);
+UseSerilogWithElasticsearchSetting();
 #endregion
 
 builder.Services.AddControllers();
@@ -112,12 +119,12 @@ using (var scope = app.Services.CreateScope())
 }
 #endregion
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
+////Configure the HTTP request pipeline.
+//if (app.Environment.IsDevelopment())
+//{
     app.UseSwagger();
     app.UseSwaggerUI();
-}
+//}
 
 app.UseHttpsRedirection();
 
@@ -126,3 +133,30 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+
+void UseSerilogWithElasticsearchSetting()
+{
+    string environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+    var configuration = new ConfigurationBuilder()
+        .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+        .AddJsonFile(
+            $"appsettings.{environment}.json",
+            optional: true)
+        .Build();
+
+    Log.Logger = new LoggerConfiguration()
+        .Enrich.FromLogContext()
+        .Enrich.WithEnvironmentName()
+        .WriteTo.Debug()
+        .WriteTo.Console()
+        .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(configuration["ElasticSearch:Url"]))
+        {
+            AutoRegisterTemplate = true,
+            IndexFormat = $"{Assembly.GetExecutingAssembly().GetName().Name?.ToLower().Replace(".", "-")}-{environment?.ToLower().Replace(".", "-")}-{DateTime.UtcNow:yyyy-MM}"
+        })
+        .Enrich.WithProperty("Environment", environment!)
+        .ReadFrom.Configuration(configuration)
+        .CreateLogger();
+    builder.Host.UseSerilog();
+}

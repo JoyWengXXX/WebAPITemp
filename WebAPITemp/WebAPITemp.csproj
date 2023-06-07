@@ -8,6 +8,7 @@
     <NoWarn>$(NoWarn);1591</NoWarn>
     <UserSecretsId>a18af069-c8fa-492e-a574-42d3305cf26a</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileTag>joywengxxx/webapitemp/wbapi</DockerfileTag>
   </PropertyGroup>
 
   <ItemGroup>
